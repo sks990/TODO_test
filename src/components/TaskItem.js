@@ -1,86 +1,130 @@
-const TaskItem = ({ task, onToggleComplete, onEdit, onDelete }) => {
-    const taskItemElement = document.createElement('div');
-    taskItemElement.className = `task-item ${task.status === 'done' ? 'completed' : ''}`;
-    taskItemElement.dataset.taskId = task.id;
-    taskItemElement.setAttribute('draggable', true); // Make it draggable
+import { formatDate, getPriorityClass, getStatusText } from '../utils/helpers.js';
 
-    // Determine priority class and text
-    let priorityClass = '';
-    let priorityText = '';
-    switch (task.priority) {
-        case 'high':
-            priorityClass = 'priority-high';
-            priorityText = 'High';
-            break;
-        case 'medium':
-            priorityClass = 'priority-medium';
-            priorityText = 'Medium';
-            break;
-        case 'low':
-            priorityClass = 'priority-low';
-            priorityText = 'Low';
-            break;
-        default:
-            priorityClass = 'priority-medium';
-            priorityText = 'Medium';
+export default class TaskItem {
+    constructor(task, { onToggleComplete, onEdit, onDelete }) {
+        this.task = task;
+        this.onToggleComplete = onToggleComplete;
+        this.onEdit = onEdit;
+        this.onDelete = onDelete;
     }
 
-    // Format date for display
-    const formattedDueDate = task.dueDate ? new Date(task.dueDate).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : 'No Due Date';
+    render() {
+        const li = document.createElement('li');
+        li.className = `task-item ${this.task.completed ? 'completed' : ''} ${getPriorityClass(this.task.priority)}`;
+        li.dataset.taskId = this.task.id;
 
-    taskItemElement.innerHTML = `
-        <div class="task-item-header">
-            <div class="task-item-title" data-task-id="${task.id}">${task.title}</div>
-            <div class="task-item-actions">
-                <input type="checkbox" class="task-item-checkbox" data-task-id="${task.id}" ${task.status === 'done' ? 'checked' : ''}>
-                <button class="edit-task-button" data-task-id="${task.id}" aria-label="Edit task">✏️</button>
-                <button class="delete-task-button" data-task-id="${task.id}" aria-label="Delete task">❌</button>
-            </div>
-        </div>
-        <div class="task-item-details">
-            <span class="task-item-priority ${priorityClass}">${priorityText}</span>
-            ${task.dueDate ? `<span>Due: ${formattedDueDate}</span>` : ''}
-        </div>
-    `;
+        // Checkbox for completion
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = this.task.completed;
+        checkbox.addEventListener('change', (e) => {
+            // Prevent triggering edit/drag events when just checking/unchecking
+            e.stopPropagation();
+            this.onToggleComplete(this.task.id);
+        });
 
-    // Add event listeners
-    const checkbox = taskItemElement.querySelector('.task-item-checkbox');
-    checkbox.addEventListener('change', (e) => {
-        e.stopPropagation(); // Prevent triggering edit on click
-        onToggleComplete(task.id);
-    });
+        // Task Title and Details
+        const contentDiv = document.createElement('div');
+        contentDiv.style.cursor = 'pointer'; // Indicate clickable
+        contentDiv.addEventListener('click', (e) => {
+            // Prevent triggering edit when clicking checkbox or delete button
+             if (!e.target.closest('input[type="checkbox"], button')) {
+                this.onEdit(this.task.id);
+             }
+        });
 
-    const title = taskItemElement.querySelector('.task-item-title');
-    title.addEventListener('click', (e) => {
-        e.stopPropagation();
-        onEdit(task.id);
-    });
+        const titleSpan = document.createElement('span');
+        titleSpan.textContent = this.task.title;
+        titleSpan.style.fontWeight = 'bold';
 
-    const editButton = taskItemElement.querySelector('.edit-task-button');
-    editButton.addEventListener('click', (e) => {
-        e.stopPropagation();
-        onEdit(task.id);
-    });
+        const descriptionSpan = document.createElement('span');
+        descriptionSpan.textContent = this.task.description || '';
+        descriptionSpan.style.fontSize = '13px';
+        descriptionSpan.style.marginLeft = '10px';
+        descriptionSpan.style.color = 'grey';
 
-    const deleteButton = taskItemElement.querySelector('.delete-task-button');
-    deleteButton.addEventListener('click', (e) => {
-        e.stopPropagation();
-        onDelete(task.id);
-    });
-
-    // Drag and Drop event handlers
-    taskItemElement.addEventListener('dragstart', (e) => {
-        e.dataTransfer.setData('text/plain', task.id);
-        e.dataTransfer.effectAllowed = 'move';
-        taskItemElement.classList.add('dragging'); // Add a class for visual feedback
-    });
-
-    taskItemElement.addEventListener('dragend', () => {
-        taskItemElement.classList.remove('dragging');
-    });
+        contentDiv.appendChild(titleSpan);
+        // Optionally add description if it exists and is short
+        if (this.task.description) {
+            const shortDesc = this.task.description.length > 50 ? this.task.description.substring(0, 50) + '...' : this.task.description;
+            const descElement = document.createElement('div');
+            descElement.textContent = shortDesc;
+            descElement.style.fontSize = '13px';
+            descElement.style.marginTop = '5px';
+            descElement.style.color = 'grey';
+            contentDiv.appendChild(descElement);
+        }
 
 
-    return taskItemElement;
-};
+        // Details: Due Date, Priority Indicator, Status
+        const detailsDiv = document.createElement('div');
+        detailsDiv.className = 'task-details';
 
-export default TaskItem;
+        const dueDateSpan = document.createElement('span');
+        dueDateSpan.textContent = `Due: ${formatDate(this.task.dueDate)}`;
+
+        const statusSpan = document.createElement('span');
+        statusSpan.textContent = `Status: ${getStatusText(this.task.status)}`;
+
+        const priorityIndicator = document.createElement('span');
+        priorityIndicator.className = 'priority-indicator';
+
+        const editButton = document.createElement('button');
+        editButton.textContent = 'Edit';
+        editButton.style.marginLeft = '15px';
+        editButton.style.padding = '5px 10px';
+        editButton.style.border = 'none';
+        editButton.style.borderRadius = '3px';
+        editButton.style.cursor = 'pointer';
+        editButton.style.backgroundColor = '#bdc3c7';
+        editButton.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent triggering drag events
+            this.onEdit(this.task.id);
+        });
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.style.marginLeft = '10px';
+        deleteButton.style.padding = '5px 10px';
+        deleteButton.style.border = 'none';
+        deleteButton.style.borderRadius = '3px';
+        deleteButton.style.cursor = 'pointer';
+        deleteButton.style.backgroundColor = '#e74c3c';
+        deleteButton.style.color = 'white';
+        deleteButton.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent triggering drag events
+            if (confirm('Are you sure you want to delete this task?')) {
+                this.onDelete(this.task.id);
+            }
+        });
+
+
+        detailsDiv.appendChild(dueDateSpan);
+        detailsDiv.appendChild(statusSpan);
+        detailsDiv.appendChild(priorityIndicator);
+        detailsDiv.appendChild(editButton);
+        detailsDiv.appendChild(deleteButton);
+
+        li.appendChild(checkbox);
+        li.appendChild(contentDiv);
+        li.appendChild(detailsDiv);
+
+        // Add event listeners for drag and drop (handled by parent TodoListView)
+        // li.addEventListener('dragstart', this.handleDragStart);
+        // li.addEventListener('dragover', this.handleDragOver);
+        // li.addEventListener('drop', this.handleDrop);
+        // li.addEventListener('dragend', this.handleDragEnd);
+
+        return li;
+    }
+
+    // Update the task item's display if the task data changes
+    update(newTaskData) {
+        this.task = { ...this.task, ...newTaskData };
+        const element = document.querySelector(`[data-task-id="${this.task.id}"]`);
+        if (element) {
+            const newElement = this.render();
+            element.replaceWith(newElement);
+        }
+    }
+}
