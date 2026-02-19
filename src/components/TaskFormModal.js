@@ -1,161 +1,177 @@
-import stateManager from '../utils/StateManager.js';
+import { createElement, getElement } from '../utils/helpers.js';
+import { PRIORITIES, STATUSES } from '../utils/constants.js';
 
-const TaskFormModal = ({ onSave, onCancel }) => {
-    const modalFormElement = document.createElement('form');
-    modalFormElement.className = 'task-form-modal';
+export default class TaskFormModal {
+    constructor({ taskData, onSave, onCancel }) {
+        this.taskData = taskData || {}; // Task data if editing, empty if adding
+        this.onSave = onSave;
+        this.onCancel = onCancel;
+        this.isEditing = !!taskData; // True if editing, false if adding
+        this.formValues = { ...this.taskData }; // Initialize form values
+    }
 
-    let taskTitleInput, taskDescriptionTextarea, taskStatusSelect, taskPrioritySelect, taskDueDateInput, taskStartDateInput, taskEndDateInput;
-    let formTitle = 'Add New Task';
-    let currentTaskData = null; // To hold task data if editing
+    render() {
+        const modalContent = createElement('div', { className: 'modal-content' });
 
-    // Populate form with task data if editing
-    const populateForm = (task) => {
-        formTitle = 'Edit Task';
-        currentTaskData = task;
-        taskTitleInput.value = task.title || '';
-        taskDescriptionTextarea.value = task.description || '';
-        taskStatusSelect.value = task.status || 'todo';
-        taskPrioritySelect.value = task.priority || 'medium';
-        taskDueDateInput.value = task.dueDate ? task.dueDate.split('T')[0] : '';
-        taskStartDateInput.value = task.startDate ? task.startDate.split('T')[0] : '';
-        taskEndDateInput.value = task.endDate ? task.endDate.split('T')[0] : '';
-    };
+        // Modal Header
+        const modalHeader = createElement('div', { className: 'modal-header' });
+        const title = this.isEditing ? 'Edit Task' : 'Add New Task';
+        modalHeader.appendChild(createElement('h2', { textContent: title }));
+        const closeBtn = createElement('button', { className: 'close-modal-btn', textContent: '&times;' });
+        closeBtn.addEventListener('click', this.onCancel);
+        modalHeader.appendChild(closeBtn);
 
-    // Reset form to initial state (for adding new tasks)
-    const resetForm = () => {
-        formTitle = 'Add New Task';
-        currentTaskData = null;
-        modalFormElement.reset();
-        // Clear validation messages
-        modalFormElement.querySelectorAll('.error-message').forEach(el => el.remove());
-        // Reset input borders/styles
-        modalFormElement.querySelectorAll('input, textarea, select').forEach(el => {
-            el.classList.remove('error-input');
-        });
-    };
+        // Modal Body - Form
+        const modalBody = createElement('div', { className: 'modal-body' });
+        const form = createElement('form');
 
-    // Render the form structure
-    const renderForm = () => {
-        modalFormElement.innerHTML = `
-            <div class="modal-header">
-                <h2 class="modal-title">${formTitle}</h2>
-                <button type="button" class="modal-close-button" aria-label="Close modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="task-form-group">
-                    <label for="task-title">Title</label>
-                    <input type="text" id="task-title" required>
-                </div>
-                <div class="task-form-group">
-                    <label for="task-description">Description</label>
-                    <textarea id="task-description"></textarea>
-                </div>
-                <div class="task-form-group">
-                    <label for="task-status">Status</label>
-                    <select id="task-status">
-                        <option value="todo">To Do</option>
-                        <option value="in-progress">In Progress</option>
-                        <option value="done">Done</option>
-                    </select>
-                </div>
-                <div class="task-form-group">
-                    <label for="task-priority">Priority</label>
-                    <select id="task-priority">
-                        <option value="low">Low</option>
-                        <option value="medium">Medium</option>
-                        <option value="high">High</option>
-                    </select>
-                </div>
-                <div class="task-form-group">
-                    <label for="task-due-date">Due Date</label>
-                    <input type="date" id="task-due-date">
-                </div>
-                 <div class="task-form-group">
-                    <label for="task-start-date">Start Date</label>
-                    <input type="date" id="task-start-date">
-                </div>
-                 <div class="task-form-group">
-                    <label for="task-end-date">End Date</label>
-                    <input type="date" id="task-end-date">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="modal-button btn-secondary cancel-button">Cancel</button>
-                <button type="submit" class="modal-button btn-primary save-button">Save Task</button>
-            </div>
-        `;
+        // Form Fields
+        const fields = [
+            { name: 'title', label: 'Title', type: 'text', required: true },
+            { name: 'description', label: 'Description', type: 'textarea' },
+            { name: 'status', label: 'Status', type: 'select', options: Object.values(STATUSES) },
+            { name: 'priority', label: 'Priority', type: 'select', options: Object.values(PRIORITIES) },
+            { name: 'dueDate', label: 'Due Date', type: 'date' },
+            // Add other fields as needed, e.g., startDate, endDate, boardColumnId, parentId
+        ];
 
-        // Get references to form elements after rendering
-        taskTitleInput = modalFormElement.querySelector('#task-title');
-        taskDescriptionTextarea = modalFormElement.querySelector('#task-description');
-        taskStatusSelect = modalFormElement.querySelector('#task-status');
-        taskPrioritySelect = modalFormElement.querySelector('#task-priority');
-        taskDueDateInput = modalFormElement.querySelector('#task-due-date');
-        taskStartDateInput = modalFormElement.querySelector('#task-start-date');
-        taskEndDateInput = modalFormElement.querySelector('#task-end-date');
+        fields.forEach(field => {
+            const div = createElement('div');
+            const label = createElement('label', { textContent: field.label, htmlFor: field.name });
+            let input;
 
-        // Add event listeners
-        modalFormElement.querySelector('.modal-close-button').addEventListener('click', () => {
-            onCancel();
-            resetForm();
-        });
-        modalFormElement.querySelector('.cancel-button').addEventListener('click', () => {
-            onCancel();
-            resetForm();
+            if (field.type === 'textarea') {
+                input = createElement('textarea', { id: field.name, name: field.name });
+            } else if (field.type === 'select') {
+                input = createElement('select', { id: field.name, name: field.name });
+                // Add 'Select...' option if not required or if it's a status/priority field
+                if (field.required || ['status', 'priority'].includes(field.name)) {
+                     const defaultOption = createElement('option', { value: '', textContent: `--- Select ${field.label} ---` });
+                     input.appendChild(defaultOption);
+                }
+                field.options.forEach(optionValue => {
+                    const option = createElement('option', { value: optionValue, textContent: optionValue.charAt(0).toUpperCase() + optionValue.slice(1) });
+                    input.appendChild(option);
+                });
+            } else {
+                input = createElement('input', { id: field.name, name: field.name, type: field.type });
+                if (field.type === 'date') {
+                    // Set min date to today to prevent past dates for due dates
+                    const today = new Date().toISOString().split('T')[0];
+                    input.setAttribute('min', today);
+                }
+            }
+
+            if (field.required) {
+                input.required = true;
+            }
+
+            // Set initial value from taskData or formValues
+            input.value = this.formValues[field.name] || '';
+
+            // Update formValues on input change
+            input.addEventListener('input', (e) => {
+                this.formValues[field.name] = e.target.value;
+                this.validateField(e.target, field); // Validate on input
+            });
+
+            div.appendChild(label);
+            div.appendChild(input);
+            form.appendChild(div);
         });
 
-        modalFormElement.addEventListener('submit', handleFormSubmit);
-    };
+        // Validation message container
+        const validationMessage = createElement('div', { className: 'error-message', id: 'form-error-message', style: 'display: none;' });
+        form.appendChild(validationMessage);
 
-    const handleFormSubmit = (e) => {
-        e.preventDefault();
 
-        // Clear previous validation errors
-        modalFormElement.querySelectorAll('.error-message').forEach(el => el.remove());
-        modalFormElement.querySelectorAll('.error-input').forEach(el => el.classList.remove('error-input'));
+        // Modal Footer
+        const modalFooter = createElement('div', { className: 'modal-footer' });
+        const cancelButton = createElement('button', { className: 'cancel-btn', textContent: 'Cancel' });
+        cancelButton.addEventListener('click', this.onCancel);
+        const saveButton = createElement('button', { className: 'save-btn', textContent: 'Save' });
+        saveButton.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent form submission if it were a real form
+            if (this.validateForm(form)) {
+                this.onSave({ ...this.formValues, id: this.taskData?.id }); // Pass ID if editing
+            }
+        });
+        modalFooter.appendChild(cancelButton);
+        modalFooter.appendChild(saveButton);
 
-        const taskData = {
-            title: taskTitleInput.value.trim(),
-            description: taskDescriptionTextarea.value.trim(),
-            status: taskStatusSelect.value,
-            priority: taskPrioritySelect.value,
-            dueDate: taskDueDateInput.value || null,
-            startDate: taskStartDateInput.value || null,
-            endDate: taskEndDateInput.value || null,
-            // Other fields like boardColumnId, parentId can be added if needed
-        };
+        form.appendChild(modalFooter); // Append footer to form
+        modalBody.appendChild(form);
+        modalContent.appendChild(modalHeader);
+        modalContent.appendChild(modalBody);
 
-        // Basic validation
-        let isValid = true;
-        if (!taskData.title) {
-            displayError(taskTitleInput, 'Title is required.');
-            isValid = false;
+        return modalContent;
+    }
+
+    validateField(inputElement, field) {
+        const errorMessageElement = getElement('#form-error-message');
+        const value = inputElement.value.trim();
+        let error = '';
+
+        if (field.required && !value) {
+            error = `${field.label} is required.`;
+        } else if (field.name === 'title' && value.length < 3) {
+            error = 'Title must be at least 3 characters long.';
+        }
+        // Add more specific validation rules here if needed
+
+        inputElement.style.borderColor = error ? '#e74c3c' : ''; // Red border on error
+
+        // Check if all fields are valid to display general error
+        if (!error && Object.values(this.formValues).some(val => val === '' && fields.find(f => f.name === inputElement.name)?.required)) {
+             // If there's still a required field empty, don't show specific error yet, but manage general message
+             // This logic might need refinement based on desired UX
         }
 
-        // Add more validation if needed (e.g., date formats, mutually exclusive dates)
+        return !error;
+    }
 
-        if (isValid) {
-            onSave(taskData);
-            resetForm(); // Reset form after successful save
+    validateForm(formElement) {
+        let isFormValid = true;
+        const errorMessageElement = getElement('#form-error-message');
+        errorMessageElement.textContent = ''; // Clear previous errors
+        errorMessageElement.style.display = 'none';
+
+        const fields = [
+            { name: 'title', label: 'Title', type: 'text', required: true },
+            { name: 'description', label: 'Description', type: 'textarea' },
+            { name: 'status', label: 'Status', type: 'select', options: Object.values(STATUSES) },
+            { name: 'priority', label: 'Priority', type: 'select', options: Object.values(PRIORITIES) },
+            { name: 'dueDate', label: 'Due Date', type: 'date' },
+        ];
+
+        fields.forEach(field => {
+            const input = formElement.querySelector(`[name="${field.name}"]`);
+            if (input) {
+                if (!this.validateField(input, field)) {
+                    isFormValid = false;
+                     // Accumulate errors for display if needed, or just rely on field-level errors
+                     // For simplicity, we'll just set isFormValid to false
+                }
+                // Also ensure select fields have a valid selection if required
+                if (field.type === 'select' && field.required && !input.value) {
+                     isFormValid = false;
+                     input.style.borderColor = '#e74c3c';
+                }
+            }
+        });
+
+        if (!isFormValid) {
+            errorMessageElement.textContent = 'Please fix the errors in the form.';
+            errorMessageElement.style.display = 'block';
         }
-    };
 
-    const displayError = (inputElement, message) => {
-        inputElement.classList.add('error-input');
-        const errorSpan = document.createElement('span');
-        errorSpan.className = 'error-message';
-        errorSpan.textContent = message;
-        inputElement.parentNode.insertBefore(errorSpan, inputElement.nextSibling);
-    };
+        return isFormValid;
+    }
 
-    // Initial render
-    renderForm();
-
-    // Method to update the form when editing a task
-    modalFormElement.populate = populateForm;
-    modalFormElement.resetForm = resetForm; // Expose resetForm
-
-    return modalFormElement;
-};
-
-export default TaskFormModal;
+    // Method to be called by ModalContainer when state updates (e.g., theme change)
+    update(state) {
+        // Re-render the modal content to apply theme changes if necessary
+        // For now, theme is handled directly by ModalContainer's update method
+        // but this structure allows for modal-specific theme updates if needed.
+    }
+}
