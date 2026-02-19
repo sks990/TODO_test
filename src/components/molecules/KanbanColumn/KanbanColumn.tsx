@@ -1,42 +1,44 @@
-import React, { useState } from 'react';
-import { KanbanCard } from '@/src/components/atoms/KanbanCard';
-import { Task } from '@/src/types/Task';
-import { Column } from '@/src/types/Column';
+import React from 'react';
+import { KanbanCard } from '../../atoms/KanbanCard/KanbanCard';
+import { IKanbanColumn, ITask } from '../../../types';
+import './KanbanColumn.css';
+import { useTaskStore } from '../../../stores/TaskStore';
 
 interface KanbanColumnProps {
-  column: Column;
-  tasks: Task[];
-  onDrop: (taskId: string, targetColumnId: string) => Promise<void>;
+  column: IKanbanColumn;
+  tasks: ITask[];
 }
 
-export const KanbanColumn: React.FC<KanbanColumnProps> = ({ column, tasks, onDrop }) => {
-  const [isOver, setIsOver] = useState(false);
+export const KanbanColumn: React.FC<KanbanColumnProps> = ({ column, tasks }) => {
+  const { moveTaskToColumn } = useTaskStore();
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    setIsOver(true);
+    e.currentTarget.classList.add('drag-over');
   };
 
-  const handleDragLeave = () => {
-    setIsOver(false);
-  };
-
-  const handleDropEvent = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    setIsOver(false);
+    e.currentTarget.classList.remove('drag-over');
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.currentTarget.classList.remove('drag-over');
     const taskId = e.dataTransfer.getData('text/plain');
-    onDrop(taskId, column.id);
+    moveTaskToColumn(taskId, column.id);
   };
 
   return (
     <div
-      className={`min-w-[280px] rounded-lg p-4 ${isOver ? 'bg-blue-100' : 'bg-gray-100'}`}
+      className="kanban-column"
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
-      onDrop={handleDropEvent}
+      onDrop={handleDrop}
+      data-column-id={column.id}
     >
-      <h3 className="text-lg font-semibold mb-4">{column.name}</h3>
-      <div className="min-h-[600px] space-y-3">
+      <h3 className="kanban-column-title">{column.name}</h3>
+      <div className="kanban-card-container">
         {tasks.map((task) => (
           <KanbanCard key={task.id} task={task} />
         ))}
