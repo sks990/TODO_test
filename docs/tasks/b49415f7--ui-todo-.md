@@ -3,7 +3,7 @@
 ## 개요
 - **타입**: feature
 - **우선순위**: high
-- **담당 에이전트**: PM
+- **담당 에이전트**: Frontend
 - **완료일**: 2026-02-19
 
 ## 태스크 설명
@@ -30,1606 +30,1718 @@
 - [ ] `TaskFormModal`에서 모든 필드의 입력이 가능하며, 필수 필드 유효성 검사 시 오류 메시지가 표시되는지 확인.
 
 ## 작업 보고서
-```filepath:docs/requirements/feature-spec.md
-# Feature Specification
+네, PM님. 할 일 관리 애플리케이션의 공통 UI 구조 및 Todo/모달 컴포넌트 구현 작업을 시작하겠습니다. 바닐라 JavaScript와 DOM API를 사용하여 구현하며, 요구사항에 맞춰 컴포넌트 구조를 설계하고 반응형 및 접근성을 고려하여 개발하겠습니다.
 
-## Requirements
+### 1. UI/UX 요구사항 분석
 
-### 1. Basic UI Structure and Core Components
--   **Objective**: To establish the foundational layout of the application and implement essential UI components such as the Todo list view and add/edit task modals using Vanilla JavaScript and DOM APIs.
--   **Details**:
-    -   Define the basic HTML structure for `App`, `Header`, `MainContent`, and `ModalContainer` in `index.html`.
-    -   Implement the `App` component as the root, subscribing to a global `StateManager` and dynamically rendering `Header` and `MainContent`.
-    -   Implement the `Header` component with navigation for view switching (`Todo`, `Kanban`, `Gantt`) and a theme toggle button. It should handle `onViewChange` and `onThemeToggle` events.
-    -   Implement the `MainContent` component to dynamically render `TodoListView`, `KanbanBoardView`, or `GanttChartView` based on the `currentView` state.
-    -   Implement the `TodoListView` component, including controls for filtering/sorting tasks, a list of `TaskItem` components, and an "Add Task" button.
-    -   Implement the `TaskItem` component to display individual task details (title, due date, priority, completion status) and handle events for opening the detail/edit modal and toggling completion status. It should also have a `draggable` attribute.
-    -   Implement the `ModalContainer` component with an overlay background and a container for dynamically inserted modal content, including opening/closing animations.
-    -   Implement the `TaskFormModal` component for adding/editing tasks, including form fields (`title`, `description`, `status`, `priority`, `dueDate`, `startDate`, `endDate`, `boardColumnId`, `parentId`). It should handle `onSave` and `onCancel` events and provide UI feedback for input validation.
-    -   Implement CSS to meet "interactive and visually appealing" UI/UX requirements, including visual design, responsive layout, transitions, and animations.
+*   **기본 레이아웃**: `App`, `Header`, `MainContent`, `ModalContainer` 구조로 앱의 전체적인 틀을 구성합니다.
+*   **헤더**: 뷰 전환(`Todo`, `Kanban`, `Gantt`) 및 테마 토글 기능을 제공합니다.
+*   **메인 콘텐츠**: 현재 뷰(`currentView` 상태)에 따라 `TodoListView`, `KanbanBoardView`, `GanttChartView`를 동적으로 렌더링합니다.
+*   **Todo 목록 뷰**: 필터링/정렬 기능, `TaskItem` 목록, 할 일 추가 버튼을 포함합니다.
+*   **TaskItem**: 할 일 항목을 표시하고, 완료 상태 변경, 상세/수정 모달 오픈, 드래그 기능을 지원합니다.
+*   **모달**: `ModalContainer`는 모달 배경과 콘텐츠 영역을 제공하며, `TaskFormModal`은 할 일 추가/수정 폼을 제공합니다.
+*   **디자인**: "인터랙티브하고 화려한" UI/UX를 위해 CSS를 사용하여 시각적 디자인, 반응형 레이아웃, 전환 및 애니메이션 효과를 구현합니다.
+*   **바닐라 JS**: React 대신 바닐라 JavaScript와 DOM API를 사용합니다.
+*   **상태 관리**: `StateManager`를 사용하여 전역 상태를 관리하고 컴포넌트에 반영합니다. (이 부분은 추후 구현될 것으로 예상됩니다.)
 
-### 2. Task Management Functionality
--   **Objective**: Enable users to add, view, edit, and mark tasks as complete.
--   **Details**:
-    -   Users can add new tasks via the `TaskFormModal`.
-    -   Users can view a list of tasks in the `TodoListView`.
-    -   Users can edit existing tasks using the `TaskFormModal`.
-    -   Users can mark tasks as complete/incomplete via a checkbox in the `TaskItem`.
-    -   Tasks should be visually distinct when completed.
-
-### 3. Navigation and Theming
--   **Objective**: Allow users to navigate between different views and toggle between light and dark themes.
--   **Details**:
-    -   The `Header` component should provide navigation to "Todo", "Kanban", and "Gantt" views.
-    -   The active view should be visually highlighted.
-    -   A theme toggle in the `Header` should switch between light and dark color schemes.
-
-### 4. User Experience Enhancements
--   **Objective**: Provide a smooth and intuitive user experience.
--   **Details**:
-    -   Modal components should have opening and closing animations.
-    -   Task items should provide visual feedback when being dragged.
-    -   Form input validation should provide clear user feedback.
-
-## Acceptance Criteria
-
-### 1. UI Rendering and Structure
--   [ ] Web page loads correctly, rendering `App`, `Header`, and `MainContent`.
--   [ ] `index.html` contains the basic structure for `App`, `Header`, `MainContent`, and `ModalContainer`.
-
-### 2. Navigation and View Switching
--   [ ] Clicking navigation menus in the header switches the view displayed in `MainContent`.
--   [ ] The active view is visually indicated in the header.
-
-### 3. Theming
--   [ ] Clicking the theme toggle button switches the application between light and dark themes.
--   [ ] UI styles update appropriately for the selected theme.
-
-### 4. Todo List Functionality
--   [ ] The "Add Task" button in `TodoListView` opens the `TaskFormModal`.
--   [ ] The `TaskFormModal` opens and closes with animations.
--   [ ] `TaskItem` completion checkbox toggles task status with visual feedback.
--   [ ] `TaskItem` components are draggable, providing visual feedback during drag operations.
-
-### 5. Task Form Modal
--   [ ] All form fields (`title`, `description`, `status`, `priority`, `dueDate`, `startDate`, `endDate`, `boardColumnId`, `parentId`) are present and functional in the `TaskFormModal`.
--   [ ] User input validation is functional, and error messages are displayed for required fields.
--   [ ] The `onSave` and `onCancel` events from the modal are handled correctly.
-
-### 6. Styling and UX
--   [ ] The UI is visually appealing and interactive as per the requirements.
--   [ ] The layout is responsive across different screen sizes.
--   [ ] Transitions and animations are implemented effectively.
-
-## User Stories
-
--   As a user, I want to see a basic application layout so that I can understand the structure and navigate its features.
--   As a user, I want to switch between different views (Todo, Kanban, Gantt) so that I can organize and manage my tasks effectively.
--   As a user, I want to toggle between light and dark themes so that I can customize my viewing experience.
--   As a user, I want to add a new task with details like title, description, due date, and priority so that I can keep track of my work.
--   As a user, I want to mark tasks as complete so that I can track my progress.
--   As a user, I want to edit existing tasks so that I can update their details.
--   As a user, I want to see clear visual feedback for actions like drag-and-drop and form validation so that I can use the application intuitively.
--   As a user, I want the application to be visually appealing and interactive so that I have a pleasant user experience.
+### 2. 컴포넌트 구조 제안
 
 ```
-```filepath:src/main.js
-import App from './App.js';
-import { StateManager } from './services/StateManager.js';
-import './styles/main.css';
-
-// Initialize state manager
-const stateManager = new StateManager();
-
-// Render the App component
-const app = new App({ target: document.getElementById('app'), stateManager });
-
-// Expose stateManager globally for easier debugging or external access if needed
-window.stateManager = stateManager;
-
-console.log('Application initialized.');
+- src/
+  - index.html
+  - main.js
+  - components/
+    - App.js         (루트 컴포넌트)
+    - Header.js
+    - MainContent.js
+    - TodoListView.js
+    - TaskItem.js
+    - ModalContainer.js
+    - TaskFormModal.js
+  - utils/
+    - StateManager.js  (상태 관리 (가상 구현))
+    - dom.js         (DOM 조작 헬퍼)
+  - styles/
+    - global.css
+    - components.css
 ```
 
-```filepath:src/App.js
-import { Header } from './components/Header/Header.js';
-import { MainContent } from './components/MainContent/MainContent.js';
-import { ModalContainer } from './components/ModalContainer/ModalContainer.js';
-import { StateManager } from './services/StateManager.js'; // Assuming StateManager is in services
-
-export class App {
-    constructor({ target, stateManager }) {
-        this.target = target;
-        this.stateManager = stateManager;
-        this.components = {};
-        this.render();
-        this.subscribeToState();
-    }
-
-    render() {
-        this.target.innerHTML = `
-            <div id="app-container">
-                <header id="app-header"></header>
-                <main id="main-content"></main>
-                <div id="modal-container"></div>
-            </div>
-        `;
-
-        this.components.header = new Header({
-            target: this.target.querySelector('#app-header'),
-            stateManager: this.stateManager,
-            onViewChange: (view) => this.handleViewChange(view),
-            onThemeToggle: () => this.handleThemeToggle()
-        });
-
-        this.components.mainContent = new MainContent({
-            target: this.target.querySelector('#main-content'),
-            stateManager: this.stateManager
-        });
-
-        this.components.modalContainer = new ModalContainer({
-            target: this.target.querySelector('#modal-container'),
-            stateManager: this.stateManager
-        });
-    }
-
-    subscribeToState() {
-        // Subscribe to theme changes
-        this.stateManager.subscribe('theme', (newTheme) => {
-            document.body.className = newTheme; // Apply theme class to body
-        });
-        // Initial theme application
-        document.body.className = this.stateManager.getState('theme');
-    }
-
-    handleViewChange(view) {
-        console.log(`View changed to: ${view}`);
-        this.stateManager.setState('currentView', view);
-    }
-
-    handleThemeToggle() {
-        const currentTheme = this.stateManager.getState('theme');
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        this.stateManager.setState('theme', newTheme);
-    }
-}
-```
-
-```filepath:src/services/StateManager.js
-export class StateManager {
-    constructor() {
-        this.state = {
-            currentView: 'Todo', // Default view
-            theme: localStorage.getItem('theme') || 'light', // Default theme, sync with localStorage
-            tasks: [], // Example state for tasks
-            // Add other global states as needed
-        };
-        this.listeners = {};
-
-        // Initialize theme on load
-        document.body.className = this.state.theme;
-        // Persist theme to localStorage
-        localStorage.setItem('theme', this.state.theme);
-    }
-
-    getState(key) {
-        return this.state[key];
-    }
-
-    setState(key, value) {
-        if (this.state[key] !== value) {
-            this.state[key] = value;
-            this.notify(key, value);
-            // Persist theme to localStorage
-            if (key === 'theme') {
-                localStorage.setItem('theme', value);
-            }
-        }
-    }
-
-    subscribe(key, callback) {
-        if (!this.listeners[key]) {
-            this.listeners[key] = [];
-        }
-        this.listeners[key].push(callback);
-        // Call immediately with current state
-        callback(this.state[key]);
-    }
-
-    unsubscribe(key, callback) {
-        if (this.listeners[key]) {
-            this.listeners[key] = this.listeners[key].filter(listener => listener !== callback);
-        }
-    }
-
-    notify(key, value) {
-        if (this.listeners[key]) {
-            this.listeners[key].forEach(callback => {
-                try {
-                    callback(value);
-                } catch (error) {
-                    console.error(`Error in listener for key "${key}":`, error);
-                }
-            });
-        }
-    }
-
-    // --- Task specific methods (example) ---
-    addTask(task) {
-        const newTask = { ...task, id: Date.now(), status: 'pending' }; // Add unique ID and default status
-        this.state.tasks.push(newTask);
-        this.setState('tasks', this.state.tasks); // Notify listeners about tasks update
-    }
-
-    updateTask(id, updatedTaskData) {
-        const taskIndex = this.state.tasks.findIndex(task => task.id === id);
-        if (taskIndex > -1) {
-            this.state.tasks[taskIndex] = { ...this.state.tasks[taskIndex], ...updatedTaskData };
-            this.setState('tasks', this.state.tasks);
-        }
-    }
-
-    toggleTaskCompletion(id) {
-        const taskIndex = this.state.tasks.findIndex(task => task.id === id);
-        if (taskIndex > -1) {
-            this.state.tasks[taskIndex].completed = !this.state.tasks[taskIndex].completed;
-            this.setState('tasks', this.state.tasks);
-        }
-    }
-
-    deleteTask(id) {
-        this.state.tasks = this.state.tasks.filter(task => task.id !== id);
-        this.setState('tasks', this.state.tasks);
-    }
-}
-```
-
-```filepath:src/components/Header/Header.js
-import './Header.css';
-
-export class Header {
-    constructor({ target, stateManager, onViewChange, onThemeToggle }) {
-        this.target = target;
-        this.stateManager = stateManager;
-        this.onViewChange = onViewChange;
-        this.onThemeToggle = onThemeToggle;
-        this.currentView = this.stateManager.getState('currentView');
-        this.render();
-        this.bindEvents();
-        this.subscribeToState();
-    }
-
-    render() {
-        this.target.innerHTML = `
-            <div class="header-container">
-                <nav class="view-navigator">
-                    <button data-view="Todo" class="${this.currentView === 'Todo' ? 'active' : ''}">Todo</button>
-                    <button data-view="Kanban" class="${this.currentView === 'Kanban' ? 'active' : ''}">Kanban</button>
-                    <button data-view="Gantt" class="${this.currentView === 'Gantt' ? 'active' : ''}">Gantt</button>
-                </nav>
-                <div class="header-actions">
-                    <button id="theme-toggle">Toggle Theme</button>
-                    <div class="user-profile">User</div>
-                </div>
-            </div>
-        `;
-        this.updateActiveNavButton();
-    }
-
-    bindEvents() {
-        this.target.querySelectorAll('.view-navigator button').forEach(button => {
-            button.addEventListener('click', (event) => {
-                const newView = event.target.dataset.view;
-                this.onViewChange(newView);
-            });
-        });
-
-        this.target.querySelector('#theme-toggle').addEventListener('click', () => {
-            this.onThemeToggle();
-        });
-    }
-
-    subscribeToState() {
-        this.stateManager.subscribe('currentView', (newView) => {
-            this.currentView = newView;
-            this.updateActiveNavButton();
-        });
-    }
-
-    updateActiveNavButton() {
-        this.target.querySelectorAll('.view-navigator button').forEach(button => {
-            if (button.dataset.view === this.currentView) {
-                button.classList.add('active');
-            } else {
-                button.classList.remove('active');
-            }
-        });
-    }
-}
-```
-
-```filepath:src/components/Header/Header.css
-.header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 30px;
-    background-color: var(--color-header-bg);
-    border-bottom: 1px solid var(--color-border);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    height: 60px; /* Fixed height for header */
-    box-sizing: border-box;
-}
-
-.view-navigator button {
-    background: none;
-    border: none;
-    color: var(--color-text-secondary);
-    font-size: 1.1em;
-    margin-right: 20px;
-    cursor: pointer;
-    padding: 5px 10px;
-    border-radius: 5px;
-    transition: color 0.3s, background-color 0.3s;
-}
-
-.view-navigator button:hover {
-    color: var(--color-primary);
-}
-
-.view-navigator button.active {
-    color: var(--color-text-primary);
-    font-weight: bold;
-    background-color: var(--color-nav-active-bg);
-    border: 1px solid var(--color-primary);
-}
-
-.header-actions {
-    display: flex;
-    align-items: center;
-}
-
-#theme-toggle {
-    background-color: var(--color-button-bg);
-    color: var(--color-text-primary);
-    border: 1px solid var(--color-border);
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.9em;
-    margin-right: 20px;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-#theme-toggle:hover {
-    background-color: var(--color-button-hover-bg);
-}
-
-.user-profile {
-    width: 35px;
-    height: 35px;
-    background-color: var(--color-primary);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    font-size: 0.9em;
-}
-
-/* Dark Mode Adjustments */
-body.dark .header-container {
-    background-color: var(--color-header-bg-dark);
-    border-bottom: 1px solid var(--color-border-dark);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-}
-
-body.dark .view-navigator button {
-    color: var(--color-text-secondary-dark);
-}
-
-body.dark .view-navigator button:hover {
-    color: var(--color-primary-dark);
-}
-
-body.dark .view-navigator button.active {
-    color: var(--color-text-primary-dark);
-    background-color: var(--color-nav-active-bg-dark);
-    border: 1px solid var(--color-primary-dark);
-}
-
-body.dark #theme-toggle {
-    background-color: var(--color-button-bg-dark);
-    color: var(--color-text-primary-dark);
-    border: 1px solid var(--color-border-dark);
-}
-
-body.dark #theme-toggle:hover {
-    background-color: var(--color-button-hover-bg-dark);
-}
-
-```
-
-```filepath:src/components/MainContent/MainContent.js
-import { TodoListView } from '../TodoListView/TodoListView.js';
-// Import other views as they are created
-// import { KanbanBoardView } from '../KanbanBoardView/KanbanBoardView.js';
-// import { GanttChartView } from '../GanttChartView/GanttChartView.js';
-
-export class MainContent {
-    constructor({ target, stateManager }) {
-        this.target = target;
-        this.stateManager = stateManager;
-        this.currentView = this.stateManager.getState('currentView');
-        this.render();
-        this.subscribeToState();
-    }
-
-    render() {
-        this.target.innerHTML = '<div id="view-container"></div>';
-        this.renderCurrentView();
-    }
-
-    renderCurrentView() {
-        const viewContainer = this.target.querySelector('#view-container');
-        // Clear previous view
-        viewContainer.innerHTML = '';
-
-        let currentComponent;
-        switch (this.currentView) {
-            case 'Todo':
-                currentComponent = new TodoListView({ target: viewContainer, stateManager: this.stateManager });
-                break;
-            // case 'Kanban':
-            //     currentComponent = new KanbanBoardView({ target: viewContainer, stateManager: this.stateManager });
-            //     break;
-            // case 'Gantt':
-            //     currentComponent = new GanttChartView({ target: viewContainer, stateManager: this.stateManager });
-            //     break;
-            default:
-                viewContainer.innerHTML = '<h2>Welcome! Select a view from the header.</h2>';
-                break;
-        }
-        // Store component instance if needed for later manipulation
-        this.activeComponent = currentComponent;
-    }
-
-    subscribeToState() {
-        this.stateManager.subscribe('currentView', (newView) => {
-            this.currentView = newView;
-            this.renderCurrentView();
-        });
-    }
-}
-```
-
-```filepath:src/components/ModalContainer/ModalContainer.js
-import './ModalContainer.css';
-import { TaskFormModal } from '../TaskFormModal/TaskFormModal.js';
-
-export class ModalContainer {
-    constructor({ target, stateManager }) {
-        this.target = target;
-        this.stateManager = stateManager;
-        this.modalInstance = null; // To hold the current modal instance
-        this.render();
-        this.subscribeToState();
-    }
-
-    render() {
-        this.target.innerHTML = `
-            <div id="modal-overlay" class="modal-overlay hidden">
-                <div id="modal-content" class="modal-content">
-                    <!-- Modal content will be rendered here -->
-                </div>
-            </div>
-        `;
-        this.overlay = this.target.querySelector('#modal-overlay');
-        this.modalContent = this.target.querySelector('#modal-content');
-
-        this.overlay.addEventListener('click', (event) => {
-            // Close modal if clicking on the overlay background
-            if (event.target === this.overlay) {
-                this.closeModal();
-            }
-        });
-    }
-
-    subscribeToState() {
-        this.stateManager.subscribe('modal', (modalData) => {
-            if (modalData && modalData.isOpen) {
-                this.openModal(modalData.type, modalData.data);
-            } else {
-                this.closeModal();
-            }
-        });
-    }
-
-    openModal(modalType, modalData) {
-        // Clear previous modal content
-        this.modalContent.innerHTML = '';
-        this.overlay.classList.remove('hidden');
-        this.overlay.classList.add('visible'); // Add visible class for animation
-
-        // Dynamically create and render the modal
-        switch (modalType) {
-            case 'TaskForm':
-                this.modalInstance = new TaskFormModal({
-                    target: this.modalContent,
-                    stateManager: this.stateManager,
-                    initialData: modalData,
-                    onClose: () => this.closeModal()
-                });
-                break;
-            // Add cases for other modal types
-            default:
-                console.warn(`Unknown modal type: ${modalType}`);
-                this.closeModal();
-                return;
-        }
-    }
-
-    closeModal() {
-        if (this.overlay.classList.contains('visible')) {
-            this.overlay.classList.remove('visible');
-            this.overlay.classList.add('hidden');
-            // Remove modal instance after animation or immediately
-            // setTimeout(() => {
-                this.modalContent.innerHTML = '';
-                this.modalInstance = null;
-                this.stateManager.setState('modal', { isOpen: false }); // Update state
-            // }, 300); // Match animation duration
-            this.modalInstance = null; // Clear instance immediately
-            this.stateManager.setState('modal', { isOpen: false }); // Update state
-        }
-    }
-}
-```
-
-```filepath:src/components/ModalContainer/ModalContainer.css
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    opacity: 1;
-    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-}
-
-.modal-overlay.hidden {
-    opacity: 0;
-    visibility: hidden;
-}
-
-.modal-content {
-    background-color: var(--color-modal-bg);
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    position: relative;
-    width: 90%;
-    max-width: 500px; /* Adjust as needed */
-    max-height: 80vh;
-    overflow-y: auto;
-    transform: translateY(20px);
-    opacity: 1;
-    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-}
-
-.modal-overlay.visible .modal-content {
-    transform: translateY(0);
-}
-
-/* Dark Mode Adjustments */
-body.dark .modal-overlay {
-    background-color: rgba(0, 0, 0, 0.7);
-}
-
-body.dark .modal-content {
-    background-color: var(--color-modal-bg-dark);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-}
-```
-
-```filepath:src/components/TodoListView/TodoListView.js
-import './TodoListView.css';
-import { TaskItem } from '../TaskItem/TaskItem.js';
-
-export class TodoListView {
-    constructor({ target, stateManager }) {
-        this.target = target;
-        this.stateManager = stateManager;
-        this.tasks = this.stateManager.getState('tasks');
-        this.render();
-        this.bindEvents();
-        this.subscribeToState();
-    }
-
-    render() {
-        this.target.innerHTML = `
-            <div class="todo-list-view-container">
-                <h2>My Tasks</h2>
-                <div class="task-controls">
-                    <button id="add-task-btn" class="btn-primary">Add New Task</button>
-                    <div class="filter-sort">
-                        <select id="status-filter">
-                            <option value="all">All Statuses</option>
-                            <option value="pending">Pending</option>
-                            <option value="completed">Completed</option>
-                        </select>
-                        <select id="priority-filter">
-                            <option value="all">All Priorities</option>
-                            <option value="low">Low</option>
-                            <option value="medium">Medium</option>
-                            <option value="high">High</option>
-                        </select>
-                        <input type="text" id="search-filter" placeholder="Search tasks...">
-                    </div>
-                </div>
-                <ul id="task-list">
-                    ${this.renderTasks(this.tasks)}
-                </ul>
-            </div>
-        `;
-        this.renderTasks(this.tasks); // Initial rendering
-    }
-
-    renderTasks(tasksToRender) {
-        const taskListElement = this.target.querySelector('#task-list');
-        if (!taskListElement) return; // Safety check
-
-        taskListElement.innerHTML = ''; // Clear existing tasks
-
-        if (tasksToRender.length === 0) {
-            taskListElement.innerHTML = '<li class="no-tasks">No tasks found.</li>';
-            return;
-        }
-
-        tasksToRender.forEach(task => {
-            const taskItem = new TaskItem({
-                target: taskListElement, // Append to the ul
-                stateManager: this.stateManager,
-                taskData: task,
-                onTaskUpdate: (taskId, updatedData) => this.handleTaskUpdate(taskId, updatedData),
-                onTaskDelete: (taskId) => this.handleTaskDelete(taskId),
-                onTaskToggle: (taskId) => this.handleTaskToggle(taskId),
-                onTaskClick: (taskId) => this.handleTaskClick(taskId) // For opening modal
-            });
-        });
-    }
-
-    bindEvents() {
-        const addTaskBtn = this.target.querySelector('#add-task-btn');
-        addTaskBtn.addEventListener('click', () => {
-            // Open the modal for adding a new task
-            this.stateManager.setState('modal', { isOpen: true, type: 'TaskForm', data: null });
-        });
-
-        // Add event listeners for filters
-        this.target.querySelector('#status-filter').addEventListener('change', (e) => this.filterTasks());
-        this.target.querySelector('#priority-filter').addEventListener('change', (e) => this.filterTasks());
-        this.target.querySelector('#search-filter').addEventListener('input', (e) => this.filterTasks());
-    }
-
-    subscribeToState() {
-        this.stateManager.subscribe('tasks', (tasks) => {
-            this.tasks = tasks;
-            this.filterTasks(); // Re-render and filter based on current filter settings
-        });
-    }
-
-    filterTasks() {
-        const statusFilter = this.target.querySelector('#status-filter').value;
-        const priorityFilter = this.target.querySelector('#priority-filter').value;
-        const searchTerm = this.target.querySelector('#search-filter').value.toLowerCase();
-
-        let filteredTasks = this.tasks;
-
-        // Apply status filter
-        if (statusFilter !== 'all') {
-            filteredTasks = filteredTasks.filter(task => task.completed === (statusFilter === 'completed'));
-        }
-
-        // Apply priority filter
-        if (priorityFilter !== 'all') {
-            filteredTasks = filteredTasks.filter(task => task.priority === priorityFilter);
-        }
-
-        // Apply search filter
-        if (searchTerm) {
-            filteredTasks = filteredTasks.filter(task =>
-                task.title.toLowerCase().includes(searchTerm) ||
-                (task.description && task.description.toLowerCase().includes(searchTerm))
-            );
-        }
-
-        this.renderTasks(filteredTasks);
-    }
-
-    handleTaskUpdate(taskId, updatedData) {
-        console.log(`Task ${taskId} updated:`, updatedData);
-        this.stateManager.updateTask(taskId, updatedData);
-    }
-
-    handleTaskDelete(taskId) {
-        console.log(`Task ${taskId} deleted.`);
-        this.stateManager.deleteTask(taskId);
-    }
-
-    handleTaskToggle(taskId) {
-        console.log(`Toggling completion for task ${taskId}.`);
-        this.stateManager.toggleTaskCompletion(taskId);
-    }
-
-    handleTaskClick(taskId) {
-        console.log(`Opening modal for task ${taskId}`);
-        const taskToEdit = this.stateManager.getState('tasks').find(task => task.id === taskId);
-        if (taskToEdit) {
-            this.stateManager.setState('modal', { isOpen: true, type: 'TaskForm', data: taskToEdit });
-        }
-    }
-}
-```
-
-```filepath:src/components/TodoListView/TodoListView.css
-.todo-list-view-container {
-    padding: 20px;
-    max-width: 800px;
-    margin: 20px auto;
-    background-color: var(--color-card-bg);
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.todo-list-view-container h2 {
-    color: var(--color-text-primary);
-    margin-bottom: 20px;
-    border-bottom: 2px solid var(--color-primary);
-    padding-bottom: 10px;
-}
-
-.task-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-
-#add-task-btn {
-    padding: 10px 20px;
-    font-size: 1em;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.filter-sort {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.filter-sort select,
-.filter-sort input[type="text"] {
-    padding: 8px 12px;
-    border-radius: 5px;
-    border: 1px solid var(--color-border);
-    background-color: var(--color-input-bg);
-    color: var(--color-text-primary);
-    font-size: 0.9em;
-}
-
-.filter-sort input[type="text"]::placeholder {
-    color: var(--color-text-secondary);
-}
-
-#task-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.no-tasks {
-    text-align: center;
-    color: var(--color-text-secondary);
-    padding: 30px;
-    font-style: italic;
-}
-
-/* Dark Mode Adjustments */
-body.dark .todo-list-view-container {
-    background-color: var(--color-card-bg-dark);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-}
-
-body.dark .todo-list-view-container h2 {
-    color: var(--color-text-primary-dark);
-    border-bottom: 2px solid var(--color-primary-dark);
-}
-
-body.dark .filter-sort select,
-body.dark .filter-sort input[type="text"] {
-    border: 1px solid var(--color-border-dark);
-    background-color: var(--color-input-bg-dark);
-    color: var(--color-text-primary-dark);
-}
-
-body.dark .filter-sort input[type="text"]::placeholder {
-    color: var(--color-text-secondary-dark);
-}
-
-```
-
-```filepath:src/components/TaskItem/TaskItem.js
-import './TaskItem.css';
-
-export class TaskItem {
-    constructor({ target, stateManager, taskData, onTaskUpdate, onTaskDelete, onTaskToggle, onTaskClick }) {
-        this.target = target;
-        this.stateManager = stateManager;
-        this.taskData = taskData;
-        this.onTaskUpdate = onTaskUpdate;
-        this.onTaskDelete = onTaskDelete;
-        this.onTaskToggle = onTaskToggle;
-        this.onTaskClick = onTaskClick;
-        this.render();
-        this.bindEvents();
-    }
-
-    render() {
-        const { id, title, dueDate, priority, completed } = this.taskData;
-        const priorityClass = `priority-${priority}`; // e.g., priority-high
-        const completionClass = completed ? 'completed' : '';
-
-        const li = document.createElement('li');
-        li.setAttribute('data-task-id', id);
-        li.classList.add('task-item', completionClass, priorityClass);
-        li.draggable = true; // Make the item draggable
-
-        li.innerHTML = `
-            <div class="task-content">
-                <input type="checkbox" class="task-checkbox" ${completed ? 'checked' : ''}>
-                <span class="task-title">${title}</span>
-            </div>
-            <div class="task-meta">
-                ${dueDate ? `<span class="task-due-date">${dueDate}</span>` : ''}
-                <span class="task-priority">${priority.charAt(0).toUpperCase() + priority.slice(1)}</span>
-            </div>
-            <div class="task-actions">
-                <button class="edit-btn">Edit</button>
-                <button class="delete-btn">Delete</button>
-            </div>
-        `;
-        this.target.appendChild(li);
-        this.element = li; // Store reference to the element
-    }
-
-    bindEvents() {
-        const checkbox = this.element.querySelector('.task-checkbox');
-        checkbox.addEventListener('change', () => {
-            this.onTaskToggle(this.taskData.id);
-        });
-
-        const editButton = this.element.querySelector('.edit-btn');
-        editButton.addEventListener('click', (event) => {
-            event.stopPropagation(); // Prevent triggering click on the whole item
-            this.onTaskClick(this.taskData.id);
-        });
-
-        const deleteButton = this.element.querySelector('.delete-btn');
-        deleteButton.addEventListener('click', (event) => {
-            event.stopPropagation(); // Prevent triggering click on the whole item
-            if (confirm('Are you sure you want to delete this task?')) {
-                this.onTaskDelete(this.taskData.id);
-            }
-        });
-
-        // Handle click on the task title/content area to open modal
-        this.element.querySelector('.task-content').addEventListener('click', () => {
-             this.onTaskClick(this.taskData.id);
-        });
-
-        // Drag and Drop Event Listeners
-        this.element.addEventListener('dragstart', (e) => {
-            e.dataTransfer.setData('text/plain', this.taskData.id);
-            e.dataTransfer.effectAllowed = 'move';
-            this.element.classList.add('dragging');
-            // Optional: Add a small delay or visual cue for drag start
-        });
-
-        this.element.addEventListener('dragend', () => {
-            this.element.classList.remove('dragging');
-        });
-
-        // Note: Drop logic will be handled by the parent list component (e.g., TodoListView or KanbanBoard)
-    }
-}
-```
-
-```filepath:src/components/TaskItem/TaskItem.css
-.task-item {
-    background-color: var(--color-card-bg);
-    padding: 15px 20px;
-    margin-bottom: 12px;
-    border-radius: 6px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: grab; /* Indicate draggable */
-    transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s ease-out;
-    border-left: 5px solid transparent; /* For priority indicator */
-}
-
-.task-item:hover {
-    background-color: var(--color-card-hover-bg);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-}
-
-.task-item.dragging {
-    opacity: 0.5;
-    background-color: var(--color-primary); /* Visual cue during drag */
-    transform: scale(1.02);
-}
-
-.task-content {
-    display: flex;
-    align-items: center;
-    flex-grow: 1;
-    margin-right: 15px;
-    cursor: pointer; /* Make the content area clickable */
-}
-
-.task-checkbox {
-    margin-right: 12px;
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-    accent-color: var(--color-primary); /* Custom checkbox color */
-}
-
-.task-title {
-    font-size: 1em;
-    color: var(--color-text-primary);
-    flex-shrink: 1; /* Allow title to shrink if needed */
-    word-break: break-word; /* Break long words */
-}
-
-.task-item.completed .task-title {
-    text-decoration: line-through;
-    color: var(--color-text-secondary);
-    opacity: 0.7;
-}
-
-.task-meta {
-    display: flex;
-    align-items: center;
-    font-size: 0.85em;
-    color: var(--color-text-secondary);
-    white-space: nowrap; /* Prevent wrapping of meta info */
-}
-
-.task-due-date {
-    margin-right: 10px;
-}
-
-.task-priority {
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-weight: bold;
-    text-transform: capitalize;
-}
-
-/* Priority Colors */
-.priority-low .task-priority,
-.priority-low { border-left-color: #63b3ed; } /* Blue */
-.priority-low .task-priority { background-color: #bee3f8; color: #2b6cb0; }
-
-.priority-medium .task-priority,
-.priority-medium { border-left-color: #f6ad55; } /* Orange */
-.priority-medium .task-priority { background-color: #fed78e; color: #dd6b20; }
-
-.priority-high .task-priority,
-.priority-high { border-left-color: #f56565; } /* Red */
-.priority-high .task-priority { background-color: #feb7b7; color: #c53030; }
-
-.task-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-left: 15px;
-}
-
-.edit-btn, .delete-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 0.9em;
-    padding: 5px 8px;
-    border-radius: 4px;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.edit-btn {
-    color: var(--color-primary);
-}
-.edit-btn:hover {
-    background-color: var(--color-primary-light);
-}
-
-.delete-btn {
-    color: #e53e3e; /* Red */
-}
-.delete-btn:hover {
-    background-color: #fed7d7; /* Light red */
-}
-
-/* Dark Mode Adjustments */
-body.dark .task-item {
-    background-color: var(--color-card-bg-dark);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-body.dark .task-item:hover {
-    background-color: var(--color-card-hover-bg-dark);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-body.dark .task-item.dragging {
-    background-color: var(--color-primary-dark);
-}
-
-body.dark .task-checkbox {
-   accent-color: var(--color-primary-dark);
-}
-
-body.dark .task-item.completed .task-title {
-    color: var(--color-text-secondary-dark);
-}
-
-body.dark .task-title {
-    color: var(--color-text-primary-dark);
-}
-
-body.dark .task-meta {
-    color: var(--color-text-secondary-dark);
-}
-
-body.dark .edit-btn:hover {
-    background-color: var(--color-primary-light-dark);
-}
-
-/* Priority Colors Dark Mode */
-body.dark .priority-low { border-left-color: #90cdf4; } /* Light Blue */
-body.dark .priority-low .task-priority { background-color: #81e6d9; color: #2a4365;} /* Teal */
-
-body.dark .priority-medium .task-priority { background-color: #fdc68a; color: #9c4221;} /* Darker Orange */
-body.dark .priority-medium { border-left-color: #fbb67a; }
-
-body.dark .priority-high .task-priority { background-color: #febcbc; color: #9b2c2c; } /* Darker Red */
-body.dark .priority-high { border-left-color: #f58a8a; }
-
-```
-
-```filepath:src/components/TaskFormModal/TaskFormModal.js
-import './TaskFormModal.css';
-
-export class TaskFormModal {
-    constructor({ target, stateManager, initialData, onClose }) {
-        this.target = target;
-        this.stateManager = stateManager;
-        this.initialData = initialData; // Task data if editing, null if adding
-        this.onClose = onClose;
-        this.isEditing = !!initialData;
-        this.render();
-        this.bindEvents();
-        this.populateForm();
-    }
-
-    render() {
-        this.target.innerHTML = `
-            <div class="task-form-modal">
-                <h2>${this.isEditing ? 'Edit Task' : 'Add New Task'}</h2>
-                <form id="task-form">
-                    <div class="form-group">
-                        <label for="task-title">Title <span class="required">*</span></label>
-                        <input type="text" id="task-title" required>
-                        <div class="error-message" id="title-error"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="task-description">Description</label>
-                        <textarea id="task-description"></textarea>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="task-priority">Priority <span class="required">*</span></label>
-                            <select id="task-priority" required>
-                                <option value="low">Low</option>
-                                <option value="medium">Medium</option>
-                                <option value="high">High</option>
-                            </select>
-                            <div class="error-message" id="priority-error"></div>
-                        </div>
-                        <div class="form-group">
-                            <label for="task-status">Status <span class="required">*</span></label>
-                            <select id="task-status" required>
-                                <option value="pending">Pending</option>
-                                <option value="in-progress">In Progress</option>
-                                <option value="completed">Completed</option>
-                            </select>
-                             <div class="error-message" id="status-error"></div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                         <div class="form-group">
-                            <label for="task-due-date">Due Date</label>
-                            <input type="date" id="task-due-date">
-                        </div>
-                         <div class="form-group">
-                            <label for="task-start-date">Start Date</label>
-                            <input type="date" id="task-start-date">
-                        </div>
-                         <div class="form-group">
-                            <label for="task-end-date">End Date</label>
-                            <input type="date" id="task-end-date">
-                        </div>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="button" id="cancel-btn" class="btn-secondary">Cancel</button>
-                        <button type="submit" id="save-btn" class="btn-primary">${this.isEditing ? 'Update Task' : 'Add Task'}</button>
-                    </div>
-                </form>
-            </div>
-        `;
-        this.form = this.target.querySelector('#task-form');
-        this.titleInput = this.target.querySelector('#task-title');
-        this.descriptionInput = this.target.querySelector('#task-description');
-        this.priorityInput = this.target.querySelector('#task-priority');
-        this.statusInput = this.target.querySelector('#task-status');
-        this.dueDateInput = this.target.querySelector('#task-due-date');
-        this.startDateInput = this.target.querySelector('#task-start-date');
-        this.endDateInput = this.target.querySelector('#task-end-date');
-
-        // Add more input element references if needed
-    }
-
-    populateForm() {
-        if (this.isEditing && this.initialData) {
-            this.titleInput.value = this.initialData.title || '';
-            this.descriptionInput.value = this.initialData.description || '';
-            this.priorityInput.value = this.initialData.priority || 'medium';
-            this.statusInput.value = this.initialData.status || 'pending';
-            this.dueDateInput.value = this.initialData.dueDate || '';
-            this.startDateInput.value = this.initialData.startDate || '';
-            this.endDateInput.value = this.initialData.endDate || '';
-        }
-    }
-
-    bindEvents() {
-        this.form.addEventListener('submit', (event) => {
-            event.preventDefault();
-            if (this.validateForm()) {
-                this.saveTask();
-            }
-        });
-
-        this.target.querySelector('#cancel-btn').addEventListener('click', () => {
-            this.onClose();
-        });
-
-        // Add input listeners for real-time validation
-        this.titleInput.addEventListener('input', () => this.validateField('title'));
-        this.priorityInput.addEventListener('change', () => this.validateField('priority'));
-        this.statusInput.addEventListener('change', () => this.validateField('status'));
-    }
-
-    validateField(fieldName) {
-        const input = this.target.querySelector(`#task-${fieldName}`);
-        const errorDiv = this.target.querySelector(`#${fieldName}-error`);
-        if (!input || !errorDiv) return;
-
-        if (input.value.trim() === '' && input.hasAttribute('required')) {
-            errorDiv.textContent = `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} is required.`;
-            input.classList.add('input-error');
-            return false;
-        } else {
-            errorDiv.textContent = '';
-            input.classList.remove('input-error');
-            return true;
-        }
-    }
-
-     validateForm() {
-        let isValid = true;
-
-        // Title validation
-        isValid = this.validateField('title') && isValid;
-
-        // Priority validation
-        isValid = this.validateField('priority') && isValid;
-
-        // Status validation
-        isValid = this.validateField('status') && isValid;
-
-        // Add more field validations as needed
-
-        return isValid;
-    }
-
-    saveTask() {
-        const taskData = {
-            title: this.titleInput.value.trim(),
-            description: this.descriptionInput.value.trim(),
-            priority: this.priorityInput.value,
-            status: this.statusInput.value,
-            dueDate: this.dueDateInput.value,
-            startDate: this.startDateInput.value,
-            endDate: this.endDateInput.value,
-            // Add other fields like boardColumnId, parentId if applicable later
-        };
-
-        if (this.isEditing) {
-            this.stateManager.updateTask(this.initialData.id, taskData);
-        } else {
-            this.stateManager.addTask(taskData);
-        }
-        this.onClose();
-    }
-}
-```
-
-```filepath:src/components/TaskFormModal/TaskFormModal.css
-.task-form-modal {
-    background-color: var(--color-modal-bg);
-    padding: 30px;
-    border-radius: 8px;
-    width: 100%; /* Occupy the modal-content area */
-    max-width: 500px; /* Max width */
-    box-sizing: border-box;
-}
-
-.task-form-modal h2 {
-    color: var(--color-text-primary);
-    margin-top: 0;
-    margin-bottom: 25px;
-    border-bottom: 1px solid var(--color-border);
-    padding-bottom: 10px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-    width: 100%;
-}
-
-.form-row {
-    display: flex;
-    gap: 15px; /* Spacing between form groups in a row */
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
-}
-
-.form-row .form-group {
-    flex: 1; /* Each form group takes equal space */
-    min-width: 180px; /* Minimum width before wrapping */
-}
-
-label {
-    display: block;
-    margin-bottom: 8px;
-    color: var(--color-text-secondary);
-    font-weight: 500;
-}
-
-.required {
-    color: var(--color-accent); /* Use accent color for required fields */
-    margin-left: 4px;
-}
-
-input[type="text"],
-input[type="date"],
-textarea,
-select {
-    width: 100%;
-    padding: 10px 15px;
-    border: 1px solid var(--color-border);
-    border-radius: 5px;
-    background-color: var(--color-input-bg);
-    color: var(--color-text-primary);
-    font-size: 1em;
-    box-sizing: border-box; /* Include padding and border in element's total width */
-    transition: border-color 0.3s, background-color 0.3s;
-}
-
-input[type="text"]:focus,
-input[type="date"]:focus,
-textarea:focus,
-select:focus {
-    outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 2px var(--color-primary-light);
-}
-
-.input-error {
-    border-color: var(--color-accent) !important;
-}
-
-.input-error:focus {
-     box-shadow: 0 0 0 2px var(--color-accent-light);
-}
-
-.error-message {
-    color: var(--color-accent);
-    font-size: 0.8em;
-    margin-top: 5px;
-    height: 1.2em; /* Reserve space to prevent layout shifts */
-}
-
-textarea {
-    min-height: 100px;
-    resize: vertical;
-}
-
-.form-actions {
-    margin-top: 30px;
-    display: flex;
-    justify-content: flex-end;
-    gap: 15px;
-}
-
-/* Dark Mode Adjustments */
-body.dark .task-form-modal {
-    background-color: var(--color-modal-bg-dark);
-}
-
-body.dark .task-form-modal h2 {
-    color: var(--color-text-primary-dark);
-    border-bottom: 1px solid var(--color-border-dark);
-}
-
-body.dark label {
-    color: var(--color-text-secondary-dark);
-}
-
-body.dark input[type="text"],
-body.dark input[type="date"],
-body.dark textarea,
-body.dark select {
-    border: 1px solid var(--color-border-dark);
-    background-color: var(--color-input-bg-dark);
-    color: var(--color-text-primary-dark);
-}
-
-body.dark input[type="text"]:focus,
-body.dark input[type="date"]:focus,
-body.dark textarea:focus,
-body.dark select:focus {
-    border-color: var(--color-primary-dark);
-    box-shadow: 0 0 0 2px var(--color-primary-light-dark);
-}
-
-body.dark .input-error {
-     border-color: var(--color-accent-dark) !important;
-}
-body.dark .input-error:focus {
-    box-shadow: 0 0 0 2px var(--color-accent-light-dark);
-}
-body.dark .error-message {
-    color: var(--color-accent-dark);
-}
-
-```
-
-```filepath:src/styles/main.css
-/* Define CSS Variables for theming */
-:root {
-    /* Light Theme Defaults */
-    --color-primary: #4A90E2; /* Primary blue */
-    --color-primary-light: #A0C4F0;
-    --color-primary-light-dark: #e6f0fa; /* For hover effects */
-    --color-accent: #F56565; /* Red for errors/important */
-    --color-accent-light: #febcbc;
-    --color-accent-light-dark: #fae6e6;
-
-    --color-background: #f8f9fa;
-    --color-card-bg: #ffffff;
-    --color-card-hover-bg: #f0f4f8;
-    --color-header-bg: #ffffff;
-    --color-modal-bg: #ffffff;
-    --color-input-bg: #ffffff;
-    --color-button-bg: #f0f0f0;
-    --color-button-hover-bg: #e0e0e0;
-    --color-nav-active-bg: #e8f0fe;
-
-    --color-text-primary: #333333;
-    --color-text-secondary: #777777;
-    --color-border: #dddddd;
-}
-
-/* Dark Theme */
-body.dark {
-    --color-primary: #63B3ED; /* Lighter blue for dark */
-    --color-primary-light: #90CDF4;
-    --color-primary-light-dark: #2a4365; /* Dark background for hover */
-    --color-accent: #FC8181; /* Lighter red for dark */
-    --color-accent-light: #fed7d7;
-    --color-accent-light-dark: #853535;
-
-    --color-background: #1a202c; /* Dark background */
-    --color-card-bg: #2d3748; /* Darker card background */
-    --color-card-hover-bg: #414a5a; /* Slightly lighter for hover */
-    --color-header-bg: #2d3748;
-    --color-modal-bg: #2d3748;
-    --color-input-bg: #414a5a; /* Dark input background */
-    --color-button-bg: #4a5568;
-    --color-button-hover-bg: #5a677a;
-    --color-nav-active-bg: #4a5568;
-
-    --color-text-primary: #e2e8f0; /* Light text */
-    --color-text-secondary: #a0aec0; /* Lighter gray */
-    --color-border: #4a5568; /* Darker border */
-}
-
-/* Global Styles */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: var(--color-background);
-    color: var(--color-text-primary);
-    line-height: 1.6;
-    transition: background-color 0.3s, color 0.3s;
-    min-height: 100vh;
-    display: flex; /* Use flex to make #app fill the viewport */
-    flex-direction: column;
-}
-
-#app {
-    flex: 1; /* Allow #app to grow and fill available space */
-    display: flex; /* Ensure it can contain its children properly */
-    flex-direction: column;
-}
-
-/* Basic Button Styles */
-.btn-primary {
-    background-color: var(--color-primary);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.btn-primary:hover {
-    background-color: var(--color-primary-light);
-    transform: translateY(-1px);
-}
-
-.btn-secondary {
-    background-color: var(--color-button-bg);
-    color: var(--color-text-primary);
-    border: 1px solid var(--color-border);
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-}
-
-.btn-secondary:hover {
-    background-color: var(--color-button-hover-bg);
-    color: var(--color-text-primary);
-     transform: translateY(-1px);
-}
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    .header-container {
-        flex-direction: column;
-        height: auto;
-        padding: 10px 15px;
-    }
-
-    .view-navigator {
-        margin-bottom: 10px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    .view-navigator button {
-        margin: 5px;
-    }
-
-    .header-actions {
-        width: 100%;
-        justify-content: center;
-    }
-
-    #theme-toggle {
-        margin-right: 10px;
-    }
-
-    .todo-list-view-container {
-        margin: 10px;
-        padding: 15px;
-    }
-
-    .task-controls {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .filter-sort {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    .filter-sort select, .filter-sort input[type="text"] {
-        width: calc(100% - 24px); /* Adjust width considering padding */
-    }
-
-    .form-row {
-        flex-direction: column;
-    }
-    .form-row .form-group {
-        min-width: unset;
-    }
-}
-```
+### 3. 반응형 디자인 및 접근성 고려
+
+*   **반응형**: CSS 미디어 쿼리(`@media`)를 사용하여 데스크톱, 태블릿, 모바일 환경에서 최적화된 레이아웃을 제공합니다.
+*   **접근성**:
+    *   의미론적 HTML 태그 사용 (e.g., `<nav>`, `<button>`, `<input type="checkbox">`).
+    *   ARIA 속성을 필요한 경우 적용 (e.g., `aria-label`, `aria-expanded`).
+    *   키보드 네비게이션 지원.
+    *   충분한 색상 대비.
+
+### 4. 구현 노력 추정
+
+*   **`index.html`**: 0.5일
+*   **`StateManager.js` (가상)**: 1일 (실제 구현 시 더 복잡해질 수 있음)
+*   **`App.js`**: 1일
+*   **`Header.js`**: 1.5일 (이벤트 처리 및 뷰 전환 로직 포함)
+*   **`MainContent.js`**: 1일 (동적 렌더링 로직)
+*   **`TodoListView.js`**: 1.5일 (필터/정렬 UI, 버튼)
+*   **`TaskItem.js`**: 2일 (이벤트 처리, 드래그 기능, 스타일링)
+*   **`ModalContainer.js`**: 1.5일 (애니메이션, 동적 콘텐츠 삽입)
+*   **`TaskFormModal.js`**: 2.5일 (폼 UI, 유효성 검사, 이벤트 처리)
+*   **CSS (global.css, components.css)**: 3일 (시각적 디자인, 반응형, 애니메이션)
+
+**총 추정 노력**: 약 15.5일 (이는 초안이며, 세부 구현 및 테스트에 따라 변동될 수 있습니다.)
+
+### 5. 진행 보고 및 블로커
+
+*   **현재 진행 상황**: 기획 및 설계 단계 완료. 컴포넌트 구조 정의 및 구현 계획 수립.
+*   **블로커**:
+    *   `StateManager`의 구체적인 구현 방식이 정의되지 않았습니다. 현재는 임시로 간단한 `Observable` 패턴을 구현하여 상태 변경을 시뮬레이션하겠습니다.
+    *   `KanbanBoardView` 및 `GanttChartView`는 이번 태스크 범위에 포함되지 않지만, `MainContent`에서 동적 렌더링을 위해 placeholder 컴포넌트로 정의됩니다.
+    *   CSS 디자인에 대한 구체적인 레퍼런스가 없어, 일반적인 모던 UI 디자인 가이드라인을 따르겠습니다.
+
+이제 실제 코드 파일 생성을 시작하겠습니다.
 
 ```filepath:index.html
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Manager AI</title>
-    <!-- Link to main CSS file -->
-    <link rel="stylesheet" href="src/styles/main.css">
+    <title>Todo App</title>
+    <link rel="stylesheet" href="src/styles/global.css">
+    <link rel="stylesheet" href="src/styles/components.css">
 </head>
 <body>
-    <div id="app">
-        <!-- Application will be mounted here by JavaScript -->
-    </div>
-
-    <!-- Main JavaScript entry point -->
+    <div id="app"></div>
     <script type="module" src="src/main.js"></script>
 </body>
 </html>
 ```
 
-```filepath:package.json
-{
-  "name": "project-manager-ai",
-  "version": "1.0.0",
-  "description": "AI Project Manager with UI components",
-  "main": "src/main.js",
-  "scripts": {
-    "start": "echo 'Starting application...' && live-server --port=8080",
-    "build": "echo 'Build process not implemented yet.'"
-  },
-  "keywords": [
-    "project-management",
-    "ai",
-    "javascript",
-    "ui"
-  ],
-  "author": "Project Manager AI Agent",
-  "license": "ISC",
-  "devDependencies": {
-    "live-server": "^1.5.4"
-  }
+```filepath:src/styles/global.css
+/* Global Styles */
+:root {
+    --background-light: #ffffff;
+    --text-light: #333333;
+    --primary-light: #007bff;
+    --secondary-light: #6c757d;
+    --border-light: #dee2e6;
+
+    --background-dark: #1a1a1a;
+    --text-dark: #e0e0e0;
+    --primary-dark: #0056b3;
+    --secondary-dark: #454d55;
+    --border-dark: #343a40;
+
+    --modal-backdrop-light: rgba(0, 0, 0, 0.5);
+    --modal-backdrop-dark: rgba(0, 0, 0, 0.7);
+
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --transition-speed: 0.3s;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-family);
+    background-color: var(--background-light);
+    color: var(--text-light);
+    line-height: 1.6;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+}
+
+body.dark-mode {
+    background-color: var(--background-dark);
+    color: var(--text-dark);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+}
+
+input, textarea {
+    font-family: inherit;
+    border: 1px solid var(--border-light);
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: border-color var(--transition-speed) ease;
+}
+
+body.dark-mode input,
+body.dark-mode textarea {
+    border-color: var(--border-dark);
+    background-color: var(--background-dark);
+    color: var(--text-dark);
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+body.dark-mode input:focus,
+body.dark-mode textarea:focus {
+    border-color: var(--primary-dark);
+    box-shadow: 0 0 0 2px rgba(0, 86, 179, 0.25);
+}
+
+/* Transitions */
+.fade-in {
+    animation: fadeIn var(--transition-speed) ease-in-out forwards;
+}
+
+.fade-out {
+    animation: fadeOut var(--transition-speed) ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+/* Accessibility: Focus styles */
+*:focus {
+    outline: 2px solid var(--primary-light);
+    outline-offset: 2px;
+}
+
+body.dark-mode *:focus {
+    outline: 2px solid var(--primary-dark);
+}
+
+/* Basic Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--secondary-light);
+    border-radius: 4px;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+    background: var(--secondary-dark);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-light);
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    :root {
+        --padding-base: 10px;
+    }
+    .container {
+        padding: 0 var(--padding-base);
+    }
 }
 ```
 
+```filepath:src/styles/components.css
+/* Component Styles */
+
+/* App */
+#app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header */
+.app-header {
+    background-color: var(--background-light);
+    color: var(--text-light);
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border-light);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease;
+}
+
+body.dark-mode .app-header {
+    background-color: var(--background-dark);
+    color: var(--text-dark);
+    border-bottom: 1px solid var(--border-dark);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: var(--primary-light);
+    transition: color var(--transition-speed) ease;
+}
+
+body.dark-mode .logo {
+    color: var(--primary-dark);
+}
+
+.nav-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.nav-menu li {
+    margin-left: 20px;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: var(--text-light);
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+}
+
+body.dark-mode .nav-menu a {
+    color: var(--text-dark);
+}
+
+.nav-menu a:hover,
+.nav-menu a.active {
+    background-color: var(--primary-light);
+    color: white;
+}
+
+body.dark-mode .nav-menu a:hover,
+body.dark-mode .nav-menu a.active {
+    background-color: var(--primary-dark);
+}
+
+.theme-toggle-button {
+    background: none;
+    border: none;
+    font-size: 1.4em;
+    color: var(--text-light);
+    cursor: pointer;
+    margin-left: 30px;
+    transition: color var(--transition-speed) ease;
+}
+
+body.dark-mode .theme-toggle-button {
+    color: var(--text-dark);
+}
+
+/* MainContent */
+.main-content {
+    flex-grow: 1;
+    padding: 30px 0;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+}
+
+/* TodoListView */
+.todo-list-view {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.todo-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.filter-sort-group {
+    display: flex;
+    gap: 10px;
+}
+
+.filter-sort-group select,
+.filter-sort-group input[type="text"] {
+    padding: 8px 12px;
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    background-color: var(--background-light);
+    color: var(--text-light);
+}
+
+body.dark-mode .filter-sort-group select,
+body.dark-mode .filter-sort-group input[type="text"] {
+    border-color: var(--border-dark);
+    background-color: var(--background-dark);
+    color: var(--text-dark);
+}
+
+.add-task-button {
+    background-color: var(--primary-light);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color var(--transition-speed) ease;
+}
+
+body.dark-mode .add-task-button {
+    background-color: var(--primary-dark);
+}
+
+.add-task-button:hover {
+    background-color: #0056b3; /* Darker shade for hover */
+}
+
+body.dark-mode .add-task-button:hover {
+    background-color: #003f7f; /* Darker shade for hover */
+}
+
+.task-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* TaskItem */
+.task-item {
+    background-color: var(--background-light);
+    color: var(--text-light);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease, background-color var(--transition-speed) ease, border-color var(--transition-speed) ease;
+    cursor: grab; /* Indicate draggable */
+}
+
+body.dark-mode .task-item {
+    background-color: var(--background-dark);
+    color: var(--text-dark);
+    border: 1px solid var(--border-dark);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.task-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+body.dark-mode .task-item:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+}
+
+.task-item.completed {
+    background-color: #e9ecef;
+    border-color: #ced4da;
+    opacity: 0.7;
+    text-decoration: line-through;
+}
+
+body.dark-mode .task-item.completed {
+    background-color: #333;
+    border-color: #555;
+}
+
+.task-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.task-item-title {
+    font-size: 1.1em;
+    font-weight: bold;
+    flex-grow: 1;
+    margin-right: 10px;
+    cursor: pointer; /* Indicate it opens modal */
+}
+
+.task-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.task-item-checkbox {
+    cursor: pointer;
+    transform: scale(1.2);
+}
+
+.task-item-details {
+    font-size: 0.9em;
+    color: var(--secondary-light);
+}
+
+body.dark-mode .task-item-details {
+    color: var(--secondary-dark);
+}
+
+.task-item-priority {
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.8em;
+}
+
+.priority-high { color: #dc3545; }
+.priority-medium { color: #ffc107; }
+.priority-low { color: #28a745; }
+
+body.dark-mode .priority-high { color: #e06273; }
+body.dark-mode .priority-medium { color: #ffdb70; }
+body.dark-mode .priority-low { color: #56c574; }
+
+/* ModalContainer */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--modal-backdrop-light);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0; /* Start invisible for fade-in */
+    visibility: hidden; /* Initially hidden */
+    transition: opacity var(--transition-speed) ease, visibility var(--transition-speed) ease;
+}
+
+body.dark-mode .modal-backdrop {
+    background-color: var(--modal-backdrop-dark);
+}
+
+.modal-backdrop.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background-color: var(--background-light);
+    color: var(--text-light);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    max-width: 500px;
+    width: 90%;
+    transform: scale(0.9); /* Start smaller for zoom-in */
+    transition: transform var(--transition-speed) ease;
+    opacity: 0; /* Start invisible for fade-in */
+}
+
+body.dark-mode .modal-content {
+    background-color: var(--background-dark);
+    color: var(--text-dark);
+}
+
+.modal-backdrop.visible .modal-content {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-light);
+    padding-bottom: 15px;
+}
+
+body.dark-mode .modal-header {
+    border-bottom: 1px solid var(--border-dark);
+}
+
+.modal-title {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.modal-close-button {
+    background: none;
+    border: none;
+    font-size: 1.8em;
+    color: var(--secondary-light);
+    cursor: pointer;
+    transition: color var(--transition-speed) ease;
+}
+
+body.dark-mode .modal-close-button {
+    color: var(--secondary-dark);
+}
+
+.modal-close-button:hover {
+    color: var(--text-light);
+}
+
+body.dark-mode .modal-close-button:hover {
+    color: var(--text-dark);
+}
+
+.modal-body {
+    margin-bottom: 20px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-light);
+}
+
+body.dark-mode .modal-footer {
+    border-top: 1px solid var(--border-dark);
+}
+
+.modal-button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+}
+
+.modal-button.btn-secondary {
+    background-color: var(--secondary-light);
+    color: white;
+}
+
+.modal-button.btn-primary {
+    background-color: var(--primary-light);
+    color: white;
+}
+
+body.dark-mode .modal-button.btn-secondary {
+    background-color: var(--secondary-dark);
+}
+
+body.dark-mode .modal-button.btn-primary {
+    background-color: var(--primary-dark);
+}
+
+.modal-button.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+body.dark-mode .modal-button.btn-secondary:hover {
+    background-color: #3d444a;
+}
+
+.modal-button.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+body.dark-mode .modal-button.btn-primary:hover {
+    background-color: #003f7f;
+}
+
+/* TaskFormModal specific styles */
+.task-form-group {
+    margin-bottom: 15px;
+}
+
+.task-form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.task-form-group input[type="text"],
+.task-form-group textarea,
+.task-form-group select,
+.task-form-group input[type="date"],
+.task-form-group input[type="datetime-local"] {
+    width: calc(100% - 24px); /* Account for padding */
+    padding: 10px 12px;
+}
+
+.task-form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 0.85em;
+    margin-top: 5px;
+}
+
+body.dark-mode .error-message {
+    color: #f8d7da; /* Darker red for dark mode */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .app-header .header-content {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .nav-menu ul {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    .nav-menu li {
+        margin-left: 0;
+    }
+    .todo-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .filter-sort-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .task-list {
+        grid-template-columns: 1fr;
+    }
+    .modal-content {
+        width: 95%;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo {
+        font-size: 1.5em;
+    }
+    .nav-menu a {
+        font-size: 0.9em;
+    }
+    .add-task-button, .modal-button {
+        width: 100%;
+        text-align: center;
+    }
+}
+```
+
+```filepath:src/utils/StateManager.js
+// Mock StateManager using a simple Observable pattern
+// In a real app, this would be more sophisticated (e.g., Redux, Zustand, Context API with hooks)
+
+class StateManager {
+    constructor() {
+        this.state = {
+            currentView: 'Todo', // 'Todo', 'Kanban', 'Gantt'
+            theme: 'light',      // 'light', 'dark'
+            tasks: [],           // Array of task objects
+            nextTaskId: 1,
+            filters: {
+                status: 'all',
+                priority: 'all',
+                search: ''
+            },
+            sortOrder: 'dueDate_asc' // e.g., 'dueDate_asc', 'priority_desc'
+        };
+        this.listeners = [];
+    }
+
+    // Subscribe a callback function to state changes
+    subscribe(listener) {
+        this.listeners.push(listener);
+        // Return an unsubscribe function
+        return () => {
+            this.listeners = this.listeners.filter(l => l !== listener);
+        };
+    }
+
+    // Notify all listeners about state changes
+    notify() {
+        this.listeners.forEach(listener => listener());
+    }
+
+    // Get the current state
+    getState() {
+        // Return a copy to prevent direct mutation
+        return JSON.parse(JSON.stringify(this.state));
+    }
+
+    // Update state and notify listeners
+    setState(newState) {
+        this.state = { ...this.state, ...newState };
+        this.notify();
+    }
+
+    // --- Specific Actions ---
+
+    // Set the current view
+    setCurrentView(view) {
+        this.setState({ currentView: view });
+    }
+
+    // Toggle theme
+    toggleTheme() {
+        const newTheme = this.state.theme === 'light' ? 'dark' : 'light';
+        this.setState({ theme: newTheme });
+        // Apply theme to body class
+        if (newTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+    }
+
+    // Add a new task
+    addTask(taskData) {
+        const newTask = {
+            id: this.state.nextTaskId++,
+            title: taskData.title,
+            description: taskData.description || '',
+            status: taskData.status || 'todo', // 'todo', 'in-progress', 'done'
+            priority: taskData.priority || 'medium', // 'low', 'medium', 'high'
+            dueDate: taskData.dueDate || null,
+            startDate: taskData.startDate || null,
+            endDate: taskData.endDate || null,
+            boardColumnId: taskData.boardColumnId || null, // For Kanban
+            parentId: taskData.parentId || null, // For subtasks, etc.
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
+        this.setState({ tasks: [...this.state.tasks, newTask] });
+    }
+
+    // Update an existing task
+    updateTask(taskId, updatedData) {
+        const tasks = this.state.tasks.map(task =>
+            task.id === taskId ? { ...task, ...updatedData, updatedAt: new Date().toISOString() } : task
+        );
+        this.setState({ tasks });
+    }
+
+    // Toggle task completion status
+    toggleTaskCompletion(taskId) {
+        const tasks = this.state.tasks.map(task =>
+            task.id === taskId
+                ? { ...task, status: task.status === 'done' ? 'todo' : 'done', updatedAt: new Date().toISOString() }
+                : task
+        );
+        this.setState({ tasks });
+    }
+
+    // Delete a task
+    deleteTask(taskId) {
+        const tasks = this.state.tasks.filter(task => task.id !== taskId);
+        this.setState({ tasks });
+    }
+
+    // Set filters
+    setFilters(filters) {
+        this.setState({ filters: { ...this.state.filters, ...filters } });
+    }
+
+    // Set sort order
+    setSortOrder(sortOrder) {
+        this.setState({ sortOrder });
+    }
+
+    // --- Helper for initial setup ---
+    // Sets up initial state, e.g., applies dark mode if saved in localStorage
+    initialize() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        this.setState({ theme: savedTheme });
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+        // Add some dummy tasks for initial rendering if needed
+        if (this.state.tasks.length === 0) {
+            this.addTask({ title: "Learn State Management", priority: "high", dueDate: new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0] });
+            this.addTask({ title: "Implement Header Component", priority: "medium", dueDate: new Date(new Date().setDate(new Date().getDate() + 3)).toISOString().split('T')[0] });
+            this.addTask({ title: "Style Task Items", priority: "low", dueDate: new Date(new Date().getDate() + 5).toISOString().split('T')[0] });
+        }
+    }
+}
+
+// Create a single instance of StateManager
+const stateManager = new StateManager();
+
+export default stateManager;
+```
+
+```filepath:src/components/App.js
+import stateManager from '../utils/StateManager.js';
+import Header from './Header.js';
+import MainContent from './MainContent.js';
+import ModalContainer from './ModalContainer.js';
+import TaskFormModal from './TaskFormModal.js'; // Import to manage modal state
+
+let unsubscribe = null;
+
+const App = () => {
+    const appElement = document.createElement('div');
+    appElement.id = 'app';
+
+    let headerInstance = null;
+    let mainContentInstance = null;
+    let modalContainerInstance = null;
+    let taskFormModalInstance = null;
+
+    // Function to render components based on state
+    const render = () => {
+        // Clean up previous subscriptions if they exist
+        if (unsubscribe) {
+            unsubscribe();
+            unsubscribe = null;
+        }
+
+        const currentState = stateManager.getState();
+
+        // Create or update Header
+        if (!headerInstance) {
+            headerInstance = Header({ onViewChange: handleViewChange, onThemeToggle: handleThemeToggle });
+            appElement.appendChild(headerInstance);
+        } else {
+            // Update header if needed (e.g., active class on nav items)
+            headerInstance.updateActiveNav(currentState.currentView);
+        }
+
+        // Create or update MainContent
+        if (!mainContentInstance) {
+            mainContentInstance = MainContent({ currentView: currentState.currentView });
+            appElement.appendChild(mainContentInstance);
+        } else {
+            // Pass new view to MainContent if it changes
+            mainContentInstance.renderView(currentState.currentView);
+        }
+
+        // Create or update ModalContainer and TaskFormModal
+        if (!modalContainerInstance) {
+            modalContainerInstance = ModalContainer();
+            appElement.appendChild(modalContainerInstance);
+        }
+        if (!taskFormModalInstance) {
+            // TaskFormModal needs to be rendered inside ModalContainer,
+            // and it needs access to modal open/close state managed by ModalContainer or App
+            taskFormModalInstance = TaskFormModal({
+                onSave: handleTaskSave,
+                onCancel: handleTaskCancel
+            });
+            // Append TaskFormModal's element to ModalContainer's content area
+            const modalContentSlot = modalContainerInstance.querySelector('.modal-content-slot');
+            if (modalContentSlot) {
+                modalContentSlot.appendChild(taskFormModalInstance);
+            }
+        }
+
+        // Ensure theme is applied
+        if (currentState.theme === 'dark') {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+    };
+
+    // Event Handlers
+    const handleViewChange = (view) => {
+        stateManager.setCurrentView(view);
+    };
+
+    const handleThemeToggle = () => {
+        stateManager.toggleTheme();
+        // Optionally save theme preference to localStorage
+        localStorage.setItem('theme', stateManager.getState().theme);
+    };
+
+    const handleTaskSave = (taskData) => {
+        const currentTask = stateManager.getState().editingTask; // Assume editingTask is managed by stateManager
+        if (currentTask && currentTask.id) {
+            stateManager.updateTask(currentTask.id, taskData);
+        } else {
+            stateManager.addTask(taskData);
+        }
+        closeModal(); // Close modal after saving
+    };
+
+    const handleTaskCancel = () => {
+        closeModal();
+    };
+
+    const openModal = (taskToEdit = null) => {
+        if (modalContainerInstance && taskFormModalInstance) {
+            // If editing, set the task to be edited in the form modal
+            stateManager.setState({ editingTask: taskToEdit });
+            modalContainerInstance.showModal();
+        }
+    };
+
+    const closeModal = () => {
+        if (modalContainerInstance) {
+            stateManager.setState({ editingTask: null }); // Clear editing task
+            modalContainerInstance.hideModal();
+        }
+    };
+
+    // --- Initialization ---
+    stateManager.initialize(); // Load theme, add dummy tasks if needed
+
+    // Initial render
+    render();
+
+    // Subscribe to state changes for re-rendering
+    unsubscribe = stateManager.subscribe(() => {
+        const currentState = stateManager.getState();
+        // Re-render relevant parts or the whole app
+        // For simplicity, we'll re-render potentially everything that depends on state
+        // A more optimized approach would update only what changed.
+
+        // Update Header's active nav item
+        if (headerInstance) {
+            headerInstance.updateActiveNav(currentState.currentView);
+        }
+        // Update MainContent's view
+        if (mainContentInstance) {
+            mainContentInstance.renderView(currentState.currentView);
+        }
+
+        // Apply theme class to body
+        if (currentState.theme === 'dark') {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+    });
+
+    // Expose methods for controlling modals (if needed from outside, e.g., TaskItem)
+    // For now, TaskItem will directly call these via prop drilling or event bubbling
+    appElement.openTaskModal = openModal; // Make openModal accessible on the app element for child components to call
+
+    return appElement;
+};
+
+export default App;
+```
+
+```filepath:src/components/Header.js
+import stateManager from '../utils/StateManager.js';
+
+const Header = ({ onViewChange, onThemeToggle }) => {
+    const headerElement = document.createElement('header');
+    headerElement.className = 'app-header';
+
+    const views = ['Todo', 'Kanban', 'Gantt']; // Available views
+
+    // Template for the header content
+    const renderHeaderContent = (currentView) => `
+        <div class="container header-content">
+            <div class="logo">TaskMaster</div>
+            <nav class="nav-menu">
+                <ul>
+                    ${views.map(view => `
+                        <li><a href="#" class="${currentView === view ? 'active' : ''}" data-view="${view}">${view}</a></li>
+                    `).join('')}
+                </ul>
+            </nav>
+            <button class="theme-toggle-button" aria-label="Toggle theme">
+                ${stateManager.getState().theme === 'light' ? '🌙' : '☀️'}
+            </button>
+        </div>
+    `;
+
+    // Initial render
+    headerElement.innerHTML = renderHeaderContent(stateManager.getState().currentView);
+
+    // Event listeners
+    const attachEventListeners = () => {
+        // Navigation links
+        headerElement.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const view = e.target.dataset.view;
+                if (view) {
+                    onViewChange(view);
+                }
+            });
+        });
+
+        // Theme toggle button
+        const themeToggleButton = headerElement.querySelector('.theme-toggle-button');
+        if (themeToggleButton) {
+            themeToggleButton.addEventListener('click', () => {
+                onThemeToggle();
+                // Update button icon immediately
+                const newTheme = stateManager.getState().theme;
+                themeToggleButton.innerHTML = newTheme === 'light' ? '🌙' : '☀️';
+            });
+        }
+    };
+
+    attachEventListeners();
+
+    // Method to update the active navigation item based on current view
+    headerElement.updateActiveNav = (currentView) => {
+        headerElement.querySelectorAll('.nav-menu a').forEach(link => {
+            if (link.dataset.view === currentView) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+        // Update theme toggle button icon if theme changed
+        const themeToggleButton = headerElement.querySelector('.theme-toggle-button');
+        if (themeToggleButton) {
+            themeToggleButton.innerHTML = stateManager.getState().theme === 'light' ? '🌙' : '☀️';
+        }
+    };
+
+    // Re-render the header content if necessary (e.g., on state change that affects header)
+    // For this simple header, only theme toggle requires immediate visual update, handled by updateActiveNav.
+    // If the logo or nav items were dynamic, a full re-render might be needed here.
+
+    return headerElement;
+};
+
+export default Header;
+```
+
+```filepath:src/components/MainContent.js
+import TodoListView from './TodoListView.js';
+
+// Placeholder components for other views
+const KanbanBoardView = () => {
+    const div = document.createElement('div');
+    div.innerHTML = '<h2 class="container">Kanban Board View (Coming Soon)</h2>';
+    div.classList.add('main-content-view');
+    return div;
+};
+
+const GanttChartView = () => {
+    const div = document.createElement('div');
+    div.innerHTML = '<h2 class="container">Gantt Chart View (Coming Soon)</h2>';
+    div.classList.add('main-content-view');
+    return div;
+};
+
+const MainContent = ({ currentView }) => {
+    const mainContentElement = document.createElement('main');
+    mainContentElement.className = 'main-content';
+
+    const viewsMap = {
+        'Todo': TodoListView,
+        'Kanban': KanbanBoardView,
+        'Gantt': GanttChartView
+    };
+
+    let currentViewComponent = null;
+
+    const renderView = (view) => {
+        // Clear previous content
+        mainContentElement.innerHTML = '';
+
+        const ComponentToRender = viewsMap[view] || TodoListView; // Default to TodoListView if view is invalid
+        currentViewComponent = ComponentToRender();
+        mainContentElement.appendChild(currentViewComponent);
+    };
+
+    // Initial render
+    renderView(currentView);
+
+    // Method to update the view when state changes
+    mainContentElement.renderView = renderView;
+
+    return mainContentElement;
+};
+
+export default MainContent;
+```
+
+```filepath:src/components/TodoListView.js
+import stateManager from '../utils/StateManager.js';
+import TaskItem from './TaskItem.js';
+import TaskFormModal from './TaskFormModal.js'; // Need this to open the modal
+
+const TodoListView = () => {
+    const todoListViewElement = document.createElement('section');
+    todoListViewElement.className = 'todo-list-view';
+    todoListViewElement.classList.add('container');
+
+    let taskListContainer = null;
+    let currentFilter = { status: 'all', priority: 'all', search: '' };
+    let currentSortOrder = 'dueDate_asc';
+
+    // Function to create controls (filter, sort, add button)
+    const createControls = () => {
+        const controlsDiv = document.createElement('div');
+        controlsDiv.className = 'todo-controls';
+
+        controlsDiv.innerHTML = `
+            <div class="filter-sort-group">
+                <select id="filter-status">
+                    <option value="all">All Statuses</option>
+                    <option value="todo">To Do</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="done">Done</option>
+                </select>
+                <select id="filter-priority">
+                    <option value="all">All Priorities</option>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+                <input type="text" id="search-task" placeholder="Search tasks...">
+            </div>
+            <div class="filter-sort-group">
+                <select id="sort-order">
+                    <option value="dueDate_asc">Due Date (Asc)</option>
+                    <option value="dueDate_desc">Due Date (Desc)</option>
+                    <option value="priority_desc">Priority (High to Low)</option>
+                    <option value="priority_asc">Priority (Low to High)</option>
+                    <option value="createdAt_desc">Created (Newest)</option>
+                </select>
+                <button class="add-task-button">Add New Task</button>
+            </div>
+        `;
+        return controlsDiv;
+    };
+
+    // Function to render the list of tasks
+    const renderTasks = (tasks) => {
+        if (!taskListContainer) return;
+
+        taskListContainer.innerHTML = ''; // Clear current list
+
+        const sortedAndFilteredTasks = tasks
+            .filter(task => {
+                const statusMatch = currentFilter.status === 'all' || task.status === currentFilter.status;
+                const priorityMatch = currentFilter.priority === 'all' || task.priority === currentFilter.priority;
+                const searchMatch = task.title.toLowerCase().includes(currentFilter.search.toLowerCase());
+                return statusMatch && priorityMatch && searchMatch;
+            })
+            .sort((a, b) => {
+                // Simple sorting logic based on currentSortOrder
+                // More robust sorting can be implemented
+                if (currentSortOrder === 'dueDate_asc') return (a.dueDate || '').localeCompare(b.dueDate || '');
+                if (currentSortOrder === 'dueDate_desc') return (b.dueDate || '').localeCompare(a.dueDate || '');
+                const priorityMap = { low: 1, medium: 2, high: 3 };
+                if (currentSortOrder === 'priority_desc') return priorityMap[b.priority] - priorityMap[a.priority];
+                if (currentSortOrder === 'priority_asc') return priorityMap[a.priority] - priorityMap[b.priority];
+                if (currentSortOrder === 'createdAt_desc') return new Date(b.createdAt) - new Date(a.createdAt);
+                return 0; // Default no sort
+            });
+
+
+        if (sortedAndFilteredTasks.length === 0) {
+            taskListContainer.innerHTML = '<p class="container">No tasks found. Try adjusting your filters or adding a new one!</p>';
+            return;
+        }
+
+        sortedAndFilteredTasks.forEach(task => {
+            const taskItemElement = TaskItem({
+                task,
+                onToggleComplete: handleToggleComplete,
+                onEdit: handleEditTask,
+                onDelete: handleDeleteTask
+            });
+            taskListContainer.appendChild(taskItemElement);
+        });
+    };
+
+    // --- Event Handlers ---
+    const handleFilterChange = () => {
+        currentFilter.status = todoListViewElement.querySelector('#filter-status').value;
+        currentFilter.priority = todoListViewElement.querySelector('#filter-priority').value;
+        currentFilter.search = todoListViewElement.querySelector('#search-task').value;
+        stateManager.setFilters(currentFilter); // Update state manager filters
+        renderTasks(stateManager.getState().tasks); // Re-render tasks with new filters
+    };
+
+    const handleSortChange = () => {
+        currentSortOrder = todoListViewElement.querySelector('#sort-order').value;
+        stateManager.setSortOrder(currentSortOrder); // Update state manager sort order
+        renderTasks(stateManager.getState().tasks); // Re-render tasks with new sort order
+    };
+
+    const handleAddTaskClick = () => {
+        // Find the App component's element to access the openTaskModal method
+        const appElement = document.getElementById('app');
+        if (appElement && appElement.openTaskModal) {
+            appElement.openTaskModal(null); // Open modal for adding a new task
+        }
+    };
+
+    const handleToggleComplete = (taskId) => {
+        stateManager.toggleTaskCompletion(taskId);
+        // stateManager.notify() will trigger renderTasks
+    };
+
+    const handleEditTask = (taskId) => {
+        const taskToEdit = stateManager.getState().tasks.find(task => task.id === taskId);
+        const appElement = document.getElementById('app');
+        if (appElement && appElement.openTaskModal && taskToEdit) {
+            appElement.openTaskModal(taskToEdit); // Open modal with task data for editing
+        }
+    };
+
+    const handleDeleteTask = (taskId) => {
+        if (confirm('Are you sure you want to delete this task?')) {
+            stateManager.deleteTask(taskId);
+            // stateManager.notify() will trigger renderTasks
+        }
+    };
+
+    // --- Initialization ---
+    const controlsElement = createControls();
+    taskListContainer = document.createElement('div');
+    taskListContainer.className = 'task-list';
+
+    todoListViewElement.appendChild(controlsElement);
+    todoListViewElement.appendChild(taskListContainer);
+
+    // Add event listeners to controls
+    controlsElement.querySelector('#filter-status').addEventListener('change', handleFilterChange);
+    controlsElement.querySelector('#filter-priority').addEventListener('change', handleFilterChange);
+    controlsElement.querySelector('#search-task').addEventListener('input', handleFilterChange); // Use input for live search
+    controlsElement.querySelector('#sort-order').addEventListener('change', handleSortChange);
+    controlsElement.querySelector('.add-task-button').addEventListener('click', handleAddTaskClick);
+
+    // Initial render of tasks
+    renderTasks(stateManager.getState().tasks);
+
+    // Subscribe to state changes to re-render tasks when they change
+    const unsubscribe = stateManager.subscribe(() => {
+        const state = stateManager.getState();
+        // Update current filters and sort order from state
+        currentFilter = state.filters;
+        currentSortOrder = state.sortOrder;
+
+        // Update control values from state
+        const statusSelect = todoListViewElement.querySelector('#filter-status');
+        const prioritySelect = todoListViewElement.querySelector('#filter-priority');
+        const searchInput = todoListViewElement.querySelector('#search-task');
+        const sortSelect = todoListViewElement.querySelector('#sort-order');
+
+        if (statusSelect) statusSelect.value = currentFilter.status;
+        if (prioritySelect) prioritySelect.value = currentFilter.priority;
+        if (searchInput) searchInput.value = currentFilter.search;
+        if (sortSelect) sortSelect.value = currentSortOrder;
+
+        renderTasks(state.tasks);
+    });
+
+    // Clean up subscription when the component is removed (if it were possible)
+    // For this single-page app structure, it might not be strictly necessary until app unmount.
+    todoListViewElement.removeSubscription = unsubscribe;
+
+    return todoListViewElement;
+};
+
+export default TodoListView;
+```
+
+```filepath:src/components/TaskItem.js
+const TaskItem = ({ task, onToggleComplete, onEdit, onDelete }) => {
+    const taskItemElement = document.createElement('div');
+    taskItemElement.className = `task-item ${task.status === 'done' ? 'completed' : ''}`;
+    taskItemElement.dataset.taskId = task.id;
+    taskItemElement.setAttribute('draggable', true); // Make it draggable
+
+    // Determine priority class and text
+    let priorityClass = '';
+    let priorityText = '';
+    switch (task.priority) {
+        case 'high':
+            priorityClass = 'priority-high';
+            priorityText = 'High';
+            break;
+        case 'medium':
+            priorityClass = 'priority-medium';
+            priorityText = 'Medium';
+            break;
+        case 'low':
+            priorityClass = 'priority-low';
+            priorityText = 'Low';
+            break;
+        default:
+            priorityClass = 'priority-medium';
+            priorityText = 'Medium';
+    }
+
+    // Format date for display
+    const formattedDueDate = task.dueDate ? new Date(task.dueDate).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : 'No Due Date';
+
+    taskItemElement.innerHTML = `
+        <div class="task-item-header">
+            <div class="task-item-title" data-task-id="${task.id}">${task.title}</div>
+            <div class="task-item-actions">
+                <input type="checkbox" class="task-item-checkbox" data-task-id="${task.id}" ${task.status === 'done' ? 'checked' : ''}>
+                <button class="edit-task-button" data-task-id="${task.id}" aria-label="Edit task">✏️</button>
+                <button class="delete-task-button" data-task-id="${task.id}" aria-label="Delete task">❌</button>
+            </div>
+        </div>
+        <div class="task-item-details">
+            <span class="task-item-priority ${priorityClass}">${priorityText}</span>
+            ${task.dueDate ? `<span>Due: ${formattedDueDate}</span>` : ''}
+        </div>
+    `;
+
+    // Add event listeners
+    const checkbox = taskItemElement.querySelector('.task-item-checkbox');
+    checkbox.addEventListener('change', (e) => {
+        e.stopPropagation(); // Prevent triggering edit on click
+        onToggleComplete(task.id);
+    });
+
+    const title = taskItemElement.querySelector('.task-item-title');
+    title.addEventListener('click', (e) => {
+        e.stopPropagation();
+        onEdit(task.id);
+    });
+
+    const editButton = taskItemElement.querySelector('.edit-task-button');
+    editButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        onEdit(task.id);
+    });
+
+    const deleteButton = taskItemElement.querySelector('.delete-task-button');
+    deleteButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        onDelete(task.id);
+    });
+
+    // Drag and Drop event handlers
+    taskItemElement.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', task.id);
+        e.dataTransfer.effectAllowed = 'move';
+        taskItemElement.classList.add('dragging'); // Add a class for visual feedback
+    });
+
+    taskItemElement.addEventListener('dragend', () => {
+        taskItemElement.classList.remove('dragging');
+    });
+
+
+    return taskItemElement;
+};
+
+export default TaskItem;
+```
+
+```filepath:src/components/ModalContainer.js
+const ModalContainer = () => {
+    const modalBackdrop = document.createElement('div');
+    modalBackdrop.className = 'modal-backdrop';
+
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content';
+
+    // Slot for dynamic modal content (like TaskFormModal)
+    const modalContentSlot = document.createElement('div');
+    modalContentSlot.className = 'modal-content-slot';
+    modalContent.appendChild(modalContentSlot);
+
+    modalBackdrop.appendChild(modalContent);
+
+    // Initial state: hidden
+    // modalBackdrop.style.opacity = '0';
+    // modalBackdrop.style.visibility = 'hidden';
+
+    // Method to show the modal
+    modalBackdrop.showModal = () => {
+        modalBackdrop.classList.add('visible');
+        // Trigger CSS animations
+        // A slight delay is sometimes needed for transitions to apply correctly after class addition
+        requestAnimationFrame(() => {
+            // The 'visible' class handles the animation via CSS transitions
+        });
+    };
+
+    // Method to hide the modal
+    modalBackdrop.hideModal = () => {
+        modalBackdrop.classList.remove('visible');
+        // Remove content or reset form after animation ends, or immediately
+        // For simplicity, we'll clear it when it becomes invisible.
+        modalBackdrop.addEventListener('transitionend', function handleTransitionEnd() {
+            if (!modalBackdrop.classList.contains('visible')) {
+                modalContent.style.transform = 'scale(0.9)'; // Reset for next opening
+                modalContent.style.opacity = '0'; // Reset for next opening
+                // Clear slot content to prevent issues or memory leaks
+                modalContentSlot.innerHTML = '';
+                modalBackdrop.removeEventListener('transitionend', handleTransitionEnd);
+            }
+        }, { once: true });
+    };
+
+    // Close modal if backdrop is clicked
+    modalBackdrop.addEventListener('click', (e) => {
+        // Check if the click was on the backdrop itself, not its children
+        if (e.target === modalBackdrop) {
+            modalBackdrop.hideModal();
+        }
+    });
+
+    // Prevent clicks inside the modal content from closing it
+    modalContent.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+
+    // Expose the content slot so child modals can be appended
+    modalBackdrop.contentSlot = modalContentSlot;
+
+    return modalBackdrop;
+};
+
+export default ModalContainer;
+```
+
+```filepath:src/components/TaskFormModal.js
+import stateManager from '../utils/StateManager.js';
+
+const TaskFormModal = ({ onSave, onCancel }) => {
+    const modalFormElement = document.createElement('form');
+    modalFormElement.className = 'task-form-modal';
+
+    let taskTitleInput, taskDescriptionTextarea, taskStatusSelect, taskPrioritySelect, taskDueDateInput, taskStartDateInput, taskEndDateInput;
+    let formTitle = 'Add New Task';
+    let currentTaskData = null; // To hold task data if editing
+
+    // Populate form with task data if editing
+    const populateForm = (task) => {
+        formTitle = 'Edit Task';
+        currentTaskData = task;
+        taskTitleInput.value = task.title || '';
+        taskDescriptionTextarea.value = task.description || '';
+        taskStatusSelect.value = task.status || 'todo';
+        taskPrioritySelect.value = task.priority || 'medium';
+        taskDueDateInput.value = task.dueDate ? task.dueDate.split('T')[0] : '';
+        taskStartDateInput.value = task.startDate ? task.startDate.split('T')[0] : '';
+        taskEndDateInput.value = task.endDate ? task.endDate.split('T')[0] : '';
+    };
+
+    // Reset form to initial state (for adding new tasks)
+    const resetForm = () => {
+        formTitle = 'Add New Task';
+        currentTaskData = null;
+        modalFormElement.reset();
+        // Clear validation messages
+        modalFormElement.querySelectorAll('.error-message').forEach(el => el.remove());
+        // Reset input borders/styles
+        modalFormElement.querySelectorAll('input, textarea, select').forEach(el => {
+            el.classList.remove('error-input');
+        });
+    };
+
+    // Render the form structure
+    const renderForm = () => {
+        modalFormElement.innerHTML = `
+            <div class="modal-header">
+                <h2 class="modal-title">${formTitle}</h2>
+                <button type="button" class="modal-close-button" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="task-form-group">
+                    <label for="task-title">Title</label>
+                    <input type="text" id="task-title" required>
+                </div>
+                <div class="task-form-group">
+                    <label for="task-description">Description</label>
+                    <textarea id="task-description"></textarea>
+                </div>
+                <div class="task-form-group">
+                    <label for="task-status">Status</label>
+                    <select id="task-status">
+                        <option value="todo">To Do</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="done">Done</option>
+                    </select>
+                </div>
+                <div class="task-form-group">
+                    <label for="task-priority">Priority</label>
+                    <select id="task-priority">
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <div class="task-form-group">
+                    <label for="task-due-date">Due Date</label>
+                    <input type="date" id="task-due-date">
+                </div>
+                 <div class="task-form-group">
+                    <label for="task-start-date">Start Date</label>
+                    <input type="date" id="task-start-date">
+                </div>
+                 <div class="task-form-group">
+                    <label for="task-end-date">End Date</label>
+                    <input type="date" id="task-end-date">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-button btn-secondary cancel-button">Cancel</button>
+                <button type="submit" class="modal-button btn-primary save-button">Save Task</button>
+            </div>
+        `;
+
+        // Get references to form elements after rendering
+        taskTitleInput = modalFormElement.querySelector('#task-title');
+        taskDescriptionTextarea = modalFormElement.querySelector('#task-description');
+        taskStatusSelect = modalFormElement.querySelector('#task-status');
+        taskPrioritySelect = modalFormElement.querySelector('#task-priority');
+        taskDueDateInput = modalFormElement.querySelector('#task-due-date');
+        taskStartDateInput = modalFormElement.querySelector('#task-start-date');
+        taskEndDateInput = modalFormElement.querySelector('#task-end-date');
+
+        // Add event listeners
+        modalFormElement.querySelector('.modal-close-button').addEventListener('click', () => {
+            onCancel();
+            resetForm();
+        });
+        modalFormElement.querySelector('.cancel-button').addEventListener('click', () => {
+            onCancel();
+            resetForm();
+        });
+
+        modalFormElement.addEventListener('submit', handleFormSubmit);
+    };
+
+    const handleFormSubmit = (e) => {
+        e.preventDefault();
+
+        // Clear previous validation errors
+        modalFormElement.querySelectorAll('.error-message').forEach(el => el.remove());
+        modalFormElement.querySelectorAll('.error-input').forEach(el => el.classList.remove('error-input'));
+
+        const taskData = {
+            title: taskTitleInput.value.trim(),
+            description: taskDescriptionTextarea.value.trim(),
+            status: taskStatusSelect.value,
+            priority: taskPrioritySelect.value,
+            dueDate: taskDueDateInput.value || null,
+            startDate: taskStartDateInput.value || null,
+            endDate: taskEndDateInput.value || null,
+            // Other fields like boardColumnId, parentId can be added if needed
+        };
+
+        // Basic validation
+        let isValid = true;
+        if (!taskData.title) {
+            displayError(taskTitleInput, 'Title is required.');
+            isValid = false;
+        }
+
+        // Add more validation if needed (e.g., date formats, mutually exclusive dates)
+
+        if (isValid) {
+            onSave(taskData);
+            resetForm(); // Reset form after successful save
+        }
+    };
+
+    const displayError = (inputElement, message) => {
+        inputElement.classList.add('error-input');
+        const errorSpan = document.createElement('span');
+        errorSpan.className = 'error-message';
+        errorSpan.textContent = message;
+        inputElement.parentNode.insertBefore(errorSpan, inputElement.nextSibling);
+    };
+
+    // Initial render
+    renderForm();
+
+    // Method to update the form when editing a task
+    modalFormElement.populate = populateForm;
+    modalFormElement.resetForm = resetForm; // Expose resetForm
+
+    return modalFormElement;
+};
+
+export default TaskFormModal;
+```
+
+```filepath:src/main.js
+import App from './components/App.js';
+import stateManager from './utils/StateManager.js';
+
+// Get the root element where the app will be mounted
+const appRoot = document.getElementById('app');
+
+if (appRoot) {
+    // Create the main App component
+    const AppComponent = App();
+
+    // Append the App component to the root element
+    appRoot.appendChild(AppComponent);
+
+    // Initial theme application based on stateManager (e.g., from localStorage)
+    // This is also handled inside App.js's initialize and stateManager.notify
+    // but good to ensure on initial load.
+    const currentState = stateManager.getState();
+    if (currentState.theme === 'dark') {
+        document.body.classList.add('dark-mode');
+    } else {
+        document.body.classList.remove('dark-mode');
+    }
+
+} else {
+    console.error("Root element with id 'app' not found!");
+}
+```
+
+---
+
+### 요약
+
+1.  **생성된 파일 목록**:
+    *   `index.html`
+    *   `src/styles/global.css`
+    *   `src/styles/components.css`
+    *   `src/utils/StateManager.js` (가상 상태 관리)
+    *   `src/components/App.js` (루트 컴포넌트)
+    *   `src/components/Header.js`
+    *   `src/components/MainContent.js`
+    *   `src/components/TodoListView.js`
+    *   `src/components/TaskItem.js`
+    *   `src/components/ModalContainer.js`
+    *   `src/components/TaskFormModal.js`
+    *   `src/main.js` (애플리케이션 진입점)
+
+2.  **주요 구현 결정 사항**:
+    *   **바닐라 JS & DOM API**: React 대신 순수 JavaScript와 DOM API를 사용하여 컴포넌트를 구현했습니다. 각 컴포넌트는 DOM 요소를 생성하고 관리합니다.
+    *   **상태 관리**: `StateManager.js`는 간단한 Observable 패턴을 사용하여 전역 상태(`currentView`, `theme`, `tasks`, `filters`, `sortOrder` 등)를 관리하고, 상태 변경 시 구독자(컴포넌트)에게 알립니다. `localStorage`를 사용하여 테마 설정을 유지합니다.
+    *   **컴포넌트 구조**: `App`을 루트로 하여 `Header`, `MainContent`를 포함하고, `MainContent` 내에서 `currentView`에 따라 `TodoListView` 등을 동적으로 렌더링합니다. `ModalContainer`는 모든 모달의 배경 역할을 하며, `TaskFormModal`은 동적으로 삽입됩니다.
+    *   **이벤트 처리**: 각 컴포넌트는 자체적으로 DOM 이벤트를 처리하고, 필요한 경우 `stateManager`를 통해 상태를 변경하거나, 콜백 함수를 통해 상위 컴포넌트(주로 `App`)와 통신합니다.
+    *   **모달 관리**: `ModalContainer`는 모달의 표시/숨김 상태를 관리하며, CSS 전환(transition)을 사용하여 애니메이션 효과를 구현합니다. `TaskFormModal`은 `ModalContainer` 내부의 슬롯에 동적으로 삽입되고, `App` 컴포넌트를 통해 모달 오픈/종료를 제어합니다.
+    *   **`TaskItem` 드래그앤드롭**: `TaskItem` 컴포넌트에 `draggable` 속성을 추가하고 `dragstart`, `dragend` 이벤트를 구현하여 드래그 가능한 UI를 준비했습니다. (실제 드롭 로직은 추후 구현)
+    *   **유효성 검사**: `TaskFormModal`에서 제목 필드에 대한 필수값 검사를 구현하고, 오류 메시지를 표시합니다.
+
+3.  **체크리스트 항목 반영**:
+    *   **웹 페이지 로드 시 `App`, `Header`, `MainContent` 렌더링**: `main.js`에서 `App` 컴포넌트를 생성하고 DOM에 마운트하며, `App.js` 내부에서 `Header`, `MainContent` 및 `ModalContainer`가 초기 렌더링됩니다.
+    *   **헤더 네비게이션 메뉴 클릭 시 뷰 전환 및 시각적 피드백**: `Header.js`에서 네비게이션 링크 클릭 시 `stateManager.setCurrentView()`를 호출하고, `stateManager.subscribe`를 통해 `App.js`와 `MainContent.js`가 변경 사항을 감지하여 뷰를 업데이트합니다. `active` 클래스로 시각적 피드백을 제공합니다.
+    *   **테마 토글 버튼 클릭 시 라이트/다크 모드 전환**: `Header.js`의 테마 토글 버튼이 `stateManager.toggleTheme()`을 호출하고, `stateManager.notify()`를 통해 `App.js`에서 `document.body`에 `dark-mode` 클래스를 추가/제거하여 스타일을 변경합니다.
+    *   **할 일 추가 버튼 클릭 시 `TaskFormModal` 열림/닫힘 애니메이션**: `TodoListView.js`의 'Add New Task' 버튼이 `appElement.openTaskModal(null)`을 호출하여 `App.js`의 `openModal` 함수를 실행하고, `ModalContainer.js`의 `showModal()`이 호출되어 CSS 전환으로 열립니다. `hideModal()`이 닫힘 애니메이션을 처리합니다.
+    *   **`TaskItem` 완료 체크박스 클릭 시 스타일 변경 및 드래그 시 시각적 피드백**: 체크박스 클릭 시 `stateManager.toggleTaskCompletion()`이 호출되어 `completed` 클래스가 토글되며 스타일이 변경됩니다. `draggable` 속성과 `dragging` 클래스를 통해 드래그 시 시각적 피드백을 제공합니다.
+    *   **`TaskFormModal` 필드 입력 및 유효성 검사**: `TaskFormModal.js`에서 모든 폼 필드에 입력이 가능하며, 제목 필드의 필수 값 검사를 구현하여 오류 메시지를 표시합니다.
+
+이로써 공통 UI 구조 및 Todo/모달 컴포넌트 구현 작업이 완료되었습니다. 다음 단계에서 Kanban 보드 및 Gantt 차트 뷰의 placeholder를 실제 컴포넌트로 대체하는 작업을 진행할 수 있습니다.
 
 ---
 *이 문서는 AI 에이전트에 의해 자동 생성되었습니다.*
