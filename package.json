@@ -1,0 +1,21 @@
+{
+  "name": "project-manager-ai",
+  "version": "1.0.0",
+  "description": "AI Project Manager with UI components",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "echo 'Starting application...' && live-server --port=8080",
+    "build": "echo 'Build process not implemented yet.'"
+  },
+  "keywords": [
+    "project-management",
+    "ai",
+    "javascript",
+    "ui"
+  ],
+  "author": "Project Manager AI Agent",
+  "license": "ISC",
+  "devDependencies": {
+    "live-server": "^1.5.4"
+  }
+}
