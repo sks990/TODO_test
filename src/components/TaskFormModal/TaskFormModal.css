@@ -1,0 +1,136 @@
+.task-form-modal {
+    background-color: var(--color-modal-bg);
+    padding: 30px;
+    border-radius: 8px;
+    width: 100%; /* Occupy the modal-content area */
+    max-width: 500px; /* Max width */
+    box-sizing: border-box;
+}
+
+.task-form-modal h2 {
+    color: var(--color-text-primary);
+    margin-top: 0;
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 10px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px; /* Spacing between form groups in a row */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+.form-row .form-group {
+    flex: 1; /* Each form group takes equal space */
+    min-width: 180px; /* Minimum width before wrapping */
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+}
+
+.required {
+    color: var(--color-accent); /* Use accent color for required fields */
+    margin-left: 4px;
+}
+
+input[type="text"],
+input[type="date"],
+textarea,
+select {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid var(--color-border);
+    border-radius: 5px;
+    background-color: var(--color-input-bg);
+    color: var(--color-text-primary);
+    font-size: 1em;
+    box-sizing: border-box; /* Include padding and border in element's total width */
+    transition: border-color 0.3s, background-color 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px var(--color-primary-light);
+}
+
+.input-error {
+    border-color: var(--color-accent) !important;
+}
+
+.input-error:focus {
+     box-shadow: 0 0 0 2px var(--color-accent-light);
+}
+
+.error-message {
+    color: var(--color-accent);
+    font-size: 0.8em;
+    margin-top: 5px;
+    height: 1.2em; /* Reserve space to prevent layout shifts */
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.form-actions {
+    margin-top: 30px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+/* Dark Mode Adjustments */
+body.dark .task-form-modal {
+    background-color: var(--color-modal-bg-dark);
+}
+
+body.dark .task-form-modal h2 {
+    color: var(--color-text-primary-dark);
+    border-bottom: 1px solid var(--color-border-dark);
+}
+
+body.dark label {
+    color: var(--color-text-secondary-dark);
+}
+
+body.dark input[type="text"],
+body.dark input[type="date"],
+body.dark textarea,
+body.dark select {
+    border: 1px solid var(--color-border-dark);
+    background-color: var(--color-input-bg-dark);
+    color: var(--color-text-primary-dark);
+}
+
+body.dark input[type="text"]:focus,
+body.dark input[type="date"]:focus,
+body.dark textarea:focus,
+body.dark select:focus {
+    border-color: var(--color-primary-dark);
+    box-shadow: 0 0 0 2px var(--color-primary-light-dark);
+}
+
+body.dark .input-error {
+     border-color: var(--color-accent-dark) !important;
+}
+body.dark .input-error:focus {
+    box-shadow: 0 0 0 2px var(--color-accent-light-dark);
+}
+body.dark .error-message {
+    color: var(--color-accent-dark);
+}
