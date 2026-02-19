@@ -1,0 +1,7 @@
+.kanban-board-view {
+  display: flex;
+  overflow-x: auto;
+  padding: 20px;
+  gap: 20px;
+  height: 100%;
+}
