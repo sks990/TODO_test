@@ -1,79 +1,95 @@
-import stateManager from '../utils/StateManager.js';
+import { createElement, getElement } from '../utils/helpers.js';
+import { VIEWS } from '../utils/constants.js';
 
-const Header = ({ onViewChange, onThemeToggle }) => {
-    const headerElement = document.createElement('header');
-    headerElement.className = 'app-header';
+export default class Header {
+    constructor({ onViewChange, onThemeToggle }) {
+        this.onViewChange = onViewChange;
+        this.onThemeToggle = onThemeToggle;
+        this.viewButtons = {}; // To store references to view buttons
+    }
 
-    const views = ['Todo', 'Kanban', 'Gantt']; // Available views
+    render(currentView) {
+        const header = createElement('header');
 
-    // Template for the header content
-    const renderHeaderContent = (currentView) => `
-        <div class="container header-content">
-            <div class="logo">TaskMaster</div>
-            <nav class="nav-menu">
-                <ul>
-                    ${views.map(view => `
-                        <li><a href="#" class="${currentView === view ? 'active' : ''}" data-view="${view}">${view}</a></li>
-                    `).join('')}
-                </ul>
-            </nav>
-            <button class="theme-toggle-button" aria-label="Toggle theme">
-                ${stateManager.getState().theme === 'light' ? '🌙' : '☀️'}
-            </button>
-        </div>
-    `;
+        const leftDiv = createElement('div', { className: 'header-left' });
+        const title = createElement('h1', { textContent: 'Task Manager' });
+        leftDiv.appendChild(title);
 
-    // Initial render
-    headerElement.innerHTML = renderHeaderContent(stateManager.getState().currentView);
+        const nav = createElement('nav');
+        const ul = createElement('ul');
 
-    // Event listeners
-    const attachEventListeners = () => {
         // Navigation links
-        headerElement.querySelectorAll('.nav-menu a').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const view = e.target.dataset.view;
-                if (view) {
-                    onViewChange(view);
-                }
+        Object.keys(VIEWS).forEach(key => {
+            const view = VIEWS[key];
+            const li = createElement('li');
+            const a = createElement('a', {
+                href: '#',
+                textContent: `${view.charAt(0).toUpperCase()}${view.slice(1)}`,
+                dataset: { view: view }
             });
+            this.viewButtons[view] = a; // Store reference
+
+            // Add active class based on currentView
+            if (view === currentView) {
+                a.classList.add('active');
+            }
+
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.onViewChange(view);
+                this.updateActiveView(view);
+            });
+            li.appendChild(a);
+            ul.appendChild(li);
         });
+
+        nav.appendChild(ul);
 
         // Theme toggle button
-        const themeToggleButton = headerElement.querySelector('.theme-toggle-button');
-        if (themeToggleButton) {
-            themeToggleButton.addEventListener('click', () => {
-                onThemeToggle();
-                // Update button icon immediately
-                const newTheme = stateManager.getState().theme;
-                themeToggleButton.innerHTML = newTheme === 'light' ? '🌙' : '☀️';
-            });
-        }
-    };
+        const themeToggleBtn = createElement('button', {
+            className: 'theme-toggle',
+            textContent: '🌙' // Default to moon for light mode
+        });
+        themeToggleBtn.addEventListener('click', () => {
+            this.onThemeToggle();
+            this.updateThemeToggleIcon();
+        });
 
-    attachEventListeners();
+        header.appendChild(leftDiv);
+        header.appendChild(nav);
+        header.appendChild(themeToggleBtn);
 
-    // Method to update the active navigation item based on current view
-    headerElement.updateActiveNav = (currentView) => {
-        headerElement.querySelectorAll('.nav-menu a').forEach(link => {
-            if (link.dataset.view === currentView) {
-                link.classList.add('active');
+        this.updateThemeToggleIcon(); // Set initial icon
+
+        return header;
+    }
+
+    updateActiveView(newView) {
+        Object.keys(this.viewButtons).forEach(view => {
+            if (view === newView) {
+                this.viewButtons[view].classList.add('active');
             } else {
-                link.classList.remove('active');
+                this.viewButtons[view].classList.remove('active');
             }
         });
-        // Update theme toggle button icon if theme changed
-        const themeToggleButton = headerElement.querySelector('.theme-toggle-button');
-        if (themeToggleButton) {
-            themeToggleButton.innerHTML = stateManager.getState().theme === 'light' ? '🌙' : '☀️';
+    }
+
+    updateThemeToggleIcon() {
+        const themeToggleBtn = getElement('.theme-toggle');
+        if (themeToggleBtn) {
+            const currentTheme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+            themeToggleBtn.textContent = currentTheme === 'light' ? '🌙' : '☀️';
         }
-    };
+    }
 
-    // Re-render the header content if necessary (e.g., on state change that affects header)
-    // For this simple header, only theme toggle requires immediate visual update, handled by updateActiveNav.
-    // If the logo or nav items were dynamic, a full re-render might be needed here.
-
-    return headerElement;
-};
-
-export default Header;
+    // Method to be called by App when state updates
+    update(state) {
+        // Re-render the header, mainly to update active view link
+        const oldHeader = getElement('header');
+        if (oldHeader) {
+            const newHeaderElement = this.render(state.currentView);
+            oldHeader.replaceWith(newHeaderElement);
+        }
+        this.updateThemeToggleIcon(); // Ensure icon is correct on any state change
+    }
+}
