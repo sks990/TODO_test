@@ -1,48 +1,63 @@
 import TodoListView from './TodoListView.js';
+import { getElement, createElement } from '../utils/helpers.js';
+import { VIEWS } from '../utils/constants.js';
 
-// Placeholder components for other views
-const KanbanBoardView = () => {
-    const div = document.createElement('div');
-    div.innerHTML = '<h2 class="container">Kanban Board View (Coming Soon)</h2>';
-    div.classList.add('main-content-view');
-    return div;
-};
+export default class MainContent {
+    constructor() {
+        this.currentViewComponent = null;
+    }
 
-const GanttChartView = () => {
-    const div = document.createElement('div');
-    div.innerHTML = '<h2 class="container">Gantt Chart View (Coming Soon)</h2>';
-    div.classList.add('main-content-view');
-    return div;
-};
+    render(currentView) {
+        const mainContent = createElement('main', { className: 'main-content' });
 
-const MainContent = ({ currentView }) => {
-    const mainContentElement = document.createElement('main');
-    mainContentElement.className = 'main-content';
+        // Remove previous view if exists
+        const existingView = getElement('.current-view');
+        if (existingView) {
+            existingView.remove();
+        }
 
-    const viewsMap = {
-        'Todo': TodoListView,
-        'Kanban': KanbanBoardView,
-        'Gantt': GanttChartView
-    };
+        // Render the appropriate view based on currentView state
+        switch (currentView) {
+            case VIEWS.TODO:
+                this.currentViewComponent = new TodoListView();
+                break;
+            case VIEWS.KANBAN:
+                // Placeholder for KanbanBoardView
+                this.currentViewComponent = {
+                    render: () => createElement('div', { textContent: 'Kanban Board View (Not Implemented)', className: 'kanban-board-view' })
+                };
+                break;
+            case VIEWS.GANTT:
+                // Placeholder for GanttChartView
+                this.currentViewComponent = {
+                    render: () => createElement('div', { textContent: 'Gantt Chart View (Not Implemented)', className: 'gantt-chart-view' })
+                };
+                break;
+            default:
+                this.currentViewComponent = {
+                    render: () => createElement('div', { textContent: 'Unknown View', className: 'unknown-view' })
+                };
+        }
 
-    let currentViewComponent = null;
+        const viewElement = this.currentViewComponent.render();
+        viewElement.classList.add('current-view'); // Add a class for easy removal/identification
+        mainContent.appendChild(viewElement);
 
-    const renderView = (view) => {
-        // Clear previous content
-        mainContentElement.innerHTML = '';
+        return mainContent;
+    }
 
-        const ComponentToRender = viewsMap[view] || TodoListView; // Default to TodoListView if view is invalid
-        currentViewComponent = ComponentToRender();
-        mainContentElement.appendChild(currentViewComponent);
-    };
-
-    // Initial render
-    renderView(currentView);
-
-    // Method to update the view when state changes
-    mainContentElement.renderView = renderView;
-
-    return mainContentElement;
-};
-
-export default MainContent;
+    // Method to be called by App when state updates
+    update(state) {
+        // If the view has changed, re-render the main content
+        if (this.currentViewComponent && this.currentViewComponent.viewName !== state.currentView) {
+             const oldMainContent = getElement('.main-content');
+             if(oldMainContent) {
+                const newMainContentElement = this.render(state.currentView);
+                oldMainContent.replaceWith(newMainContentElement);
+             }
+        } else if (this.currentViewComponent && typeof this.currentViewComponent.update === 'function') {
+            // If the component has an update method (e.g., to re-render tasks), call it
+            this.currentViewComponent.update(state);
+        }
+    }
+}
