@@ -1,30 +1,20 @@
 import React from 'react';
-import { useBoardColumns } from '@/src/hooks/useBoardColumns';
-import { useTasks } from '@/src/hooks/useTasks';
-import { KanbanColumn } from '@/src/components/molecules/KanbanColumn';
-import { Task } from '@/src/types/Task';
-import { Column } from '@/src/types/Column';
+import { KanbanColumn } from '../KanbanColumn/KanbanColumn';
+import { useBoardStore } from '../../../stores/BoardStore';
+import { useTaskStore } from '../../../stores/TaskStore';
+import './KanbanBoardView.css';
 
 export const KanbanBoardView: React.FC = () => {
-  const { columns, loading: columnsLoading } = useBoardColumns();
-  const { tasks, loading: tasksLoading, moveTask } = useTasks();
-
-  if (columnsLoading || tasksLoading) {
-    return <div>Loading...</div>;
-  }
-
-  const handleDrop = async (taskId: string, targetColumnId: string) => {
-    await moveTask(taskId, targetColumnId);
-  };
+  const boardColumns = useBoardStore((state) => state.boardColumns);
+  const tasks = useTaskStore((state) => state.tasks);
 
   return (
-    <div className="flex overflow-x-auto space-x-4 p-4">
-      {columns.map((column) => (
+    <div className="kanban-board-view">
+      {boardColumns.map((column) => (
         <KanbanColumn
           key={column.id}
           column={column}
-          tasks={tasks.filter((task: Task) => task.boardColumnId === column.id)}
-          onDrop={handleDrop}
+          tasks={tasks.filter((task) => task.boardColumnId === column.id)}
         />
       ))}
     </div>
