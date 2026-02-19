@@ -1,0 +1,87 @@
+.todo-list-view-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: var(--color-card-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.todo-list-view-container h2 {
+    color: var(--color-text-primary);
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--color-primary);
+    padding-bottom: 10px;
+}
+
+.task-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+#add-task-btn {
+    padding: 10px 20px;
+    font-size: 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.filter-sort {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.filter-sort select,
+.filter-sort input[type="text"] {
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-input-bg);
+    color: var(--color-text-primary);
+    font-size: 0.9em;
+}
+
+.filter-sort input[type="text"]::placeholder {
+    color: var(--color-text-secondary);
+}
+
+#task-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.no-tasks {
+    text-align: center;
+    color: var(--color-text-secondary);
+    padding: 30px;
+    font-style: italic;
+}
+
+/* Dark Mode Adjustments */
+body.dark .todo-list-view-container {
+    background-color: var(--color-card-bg-dark);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+body.dark .todo-list-view-container h2 {
+    color: var(--color-text-primary-dark);
+    border-bottom: 2px solid var(--color-primary-dark);
+}
+
+body.dark .filter-sort select,
+body.dark .filter-sort input[type="text"] {
+    border: 1px solid var(--color-border-dark);
+    background-color: var(--color-input-bg-dark);
+    color: var(--color-text-primary-dark);
+}
+
+body.dark .filter-sort input[type="text"]::placeholder {
+    color: var(--color-text-secondary-dark);
+}
