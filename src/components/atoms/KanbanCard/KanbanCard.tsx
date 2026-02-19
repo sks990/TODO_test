@@ -1,38 +1,56 @@
 import React from 'react';
-import { Task } from '@/src/types/Task';
+import { ITask } from '../../../types';
+import './KanbanCard.css';
+import { useTaskStore } from '../../../stores/TaskStore';
 
 interface KanbanCardProps {
-  task: Task;
+  task: ITask;
 }
 
-const priorityColors: Record<string, string> = {
-  low: 'bg-green-200',
-  medium: 'bg-yellow-200',
-  high: 'bg-red-200',
-};
-
 export const KanbanCard: React.FC<KanbanCardProps> = ({ task }) => {
-  const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
-    e.dataTransfer.setData('text/plain', task.id);
-    e.dataTransfer.effectAllowed = 'move';
+  const { setSelectedTask } = useTaskStore();
+
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, taskId: string) => {
+    e.dataTransfer.setData('text/plain', taskId);
+    e.currentTarget.classList.add('dragging');
+  };
+
+  const handleDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
+    e.currentTarget.classList.remove('dragging');
   };
 
   const handleClick = () => {
-    // TODO: Implement opening TaskFormModal
-    alert(`Opening details for task: ${task.title}`);
+    setSelectedTask(task);
   };
 
-  const priorityColor = priorityColors[task.priority] || 'bg-gray-200';
+  const getPriorityColor = (priority: string): string => {
+    switch (priority.toLowerCase()) {
+      case 'high':
+        return '#FF6B6B'; // Red
+      case 'medium':
+        return '#FFD166'; // Yellow
+      case 'low':
+        return '#66D2D6'; // Blue
+      default:
+        return '#A0A0A0'; // Grey
+    }
+  };
 
   return (
     <div
-      className={`p-3 rounded-lg shadow-md cursor-grab ${priorityColor} hover:shadow-xl transition-shadow duration-200`}
+      className="kanban-card"
       draggable
-      onDragStart={handleDragStart}
+      onDragStart={(e) => handleDragStart(e, task.id)}
+      onDragEnd={handleDragEnd}
       onClick={handleClick}
+      style={{ borderLeft: `5px solid ${getPriorityColor(task.priority)}` }}
     >
-      <h4 className="font-semibold text-sm truncate">{task.title}</h4>
-      <p className="text-xs text-gray-600 truncate">{task.description}</p>
+      <h4 className="kanban-card-title">{task.title}</h4>
+      <p className="kanban-card-description">{task.description}</p>
+      <div className="kanban-card-footer">
+        <span className="kanban-card-priority">{task.priority}</span>
+        <span className="kanban-card-due-date">{task.dueDate}</span>
+      </div>
     </div>
   );
 };
