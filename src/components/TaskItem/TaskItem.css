@@ -1,0 +1,161 @@
+.task-item {
+    background-color: var(--color-card-bg);
+    padding: 15px 20px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: grab; /* Indicate draggable */
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s ease-out;
+    border-left: 5px solid transparent; /* For priority indicator */
+}
+
+.task-item:hover {
+    background-color: var(--color-card-hover-bg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.task-item.dragging {
+    opacity: 0.5;
+    background-color: var(--color-primary); /* Visual cue during drag */
+    transform: scale(1.02);
+}
+
+.task-content {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    margin-right: 15px;
+    cursor: pointer; /* Make the content area clickable */
+}
+
+.task-checkbox {
+    margin-right: 12px;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--color-primary); /* Custom checkbox color */
+}
+
+.task-title {
+    font-size: 1em;
+    color: var(--color-text-primary);
+    flex-shrink: 1; /* Allow title to shrink if needed */
+    word-break: break-word; /* Break long words */
+}
+
+.task-item.completed .task-title {
+    text-decoration: line-through;
+    color: var(--color-text-secondary);
+    opacity: 0.7;
+}
+
+.task-meta {
+    display: flex;
+    align-items: center;
+    font-size: 0.85em;
+    color: var(--color-text-secondary);
+    white-space: nowrap; /* Prevent wrapping of meta info */
+}
+
+.task-due-date {
+    margin-right: 10px;
+}
+
+.task-priority {
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+/* Priority Colors */
+.priority-low .task-priority,
+.priority-low { border-left-color: #63b3ed; } /* Blue */
+.priority-low .task-priority { background-color: #bee3f8; color: #2b6cb0; }
+
+.priority-medium .task-priority,
+.priority-medium { border-left-color: #f6ad55; } /* Orange */
+.priority-medium .task-priority { background-color: #fed78e; color: #dd6b20; }
+
+.priority-high .task-priority,
+.priority-high { border-left-color: #f56565; } /* Red */
+.priority-high .task-priority { background-color: #feb7b7; color: #c53030; }
+
+.task-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 15px;
+}
+
+.edit-btn, .delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9em;
+    padding: 5px 8px;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.edit-btn {
+    color: var(--color-primary);
+}
+.edit-btn:hover {
+    background-color: var(--color-primary-light);
+}
+
+.delete-btn {
+    color: #e53e3e; /* Red */
+}
+.delete-btn:hover {
+    background-color: #fed7d7; /* Light red */
+}
+
+/* Dark Mode Adjustments */
+body.dark .task-item {
+    background-color: var(--color-card-bg-dark);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+body.dark .task-item:hover {
+    background-color: var(--color-card-hover-bg-dark);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+body.dark .task-item.dragging {
+    background-color: var(--color-primary-dark);
+}
+
+body.dark .task-checkbox {
+   accent-color: var(--color-primary-dark);
+}
+
+body.dark .task-item.completed .task-title {
+    color: var(--color-text-secondary-dark);
+}
+
+body.dark .task-title {
+    color: var(--color-text-primary-dark);
+}
+
+body.dark .task-meta {
+    color: var(--color-text-secondary-dark);
+}
+
+body.dark .edit-btn:hover {
+    background-color: var(--color-primary-light-dark);
+}
+
+/* Priority Colors Dark Mode */
+body.dark .priority-low { border-left-color: #90cdf4; } /* Light Blue */
+body.dark .priority-low .task-priority { background-color: #81e6d9; color: #2a4365;} /* Teal */
+
+body.dark .priority-medium .task-priority { background-color: #fdc68a; color: #9c4221;} /* Darker Orange */
+body.dark .priority-medium { border-left-color: #fbb67a; }
+
+body.dark .priority-high .task-priority { background-color: #febcbc; color: #9b2c2c; } /* Darker Red */
+body.dark .priority-high { border-left-color: #f58a8a; }
