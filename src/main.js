@@ -1,14 +1,26 @@
-import App from './App.js';
-import { StateManager } from './services/StateManager.js';
-import './styles/main.css';
+import App from './components/App.js';
+import stateManager from './utils/StateManager.js';
 
-// Initialize state manager
-const stateManager = new StateManager();
+// Get the root element where the app will be mounted
+const appRoot = document.getElementById('app');
 
-// Render the App component
-const app = new App({ target: document.getElementById('app'), stateManager });
+if (appRoot) {
+    // Create the main App component
+    const AppComponent = App();
 
-// Expose stateManager globally for easier debugging or external access if needed
-window.stateManager = stateManager;
+    // Append the App component to the root element
+    appRoot.appendChild(AppComponent);
 
-console.log('Application initialized.');
+    // Initial theme application based on stateManager (e.g., from localStorage)
+    // This is also handled inside App.js's initialize and stateManager.notify
+    // but good to ensure on initial load.
+    const currentState = stateManager.getState();
+    if (currentState.theme === 'dark') {
+        document.body.classList.add('dark-mode');
+    } else {
+        document.body.classList.remove('dark-mode');
+    }
+
+} else {
+    console.error("Root element with id 'app' not found!");
+}
