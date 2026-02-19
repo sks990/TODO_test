@@ -1,26 +1,14 @@
 import App from './components/App.js';
-import stateManager from './utils/StateManager.js';
 
-// Get the root element where the app will be mounted
-const appRoot = document.getElementById('app');
+// Initialize the application
+// The App component constructor finds the #app element and renders itself.
+// No explicit call to App.init() needed here as it's handled within App.js
+console.log('Main script loaded. App initialization is handled in App.js.');
 
-if (appRoot) {
-    // Create the main App component
-    const AppComponent = App();
-
-    // Append the App component to the root element
-    appRoot.appendChild(AppComponent);
-
-    // Initial theme application based on stateManager (e.g., from localStorage)
-    // This is also handled inside App.js's initialize and stateManager.notify
-    // but good to ensure on initial load.
-    const currentState = stateManager.getState();
-    if (currentState.theme === 'dark') {
-        document.body.classList.add('dark-mode');
-    } else {
-        document.body.classList.remove('dark-mode');
-    }
-
-} else {
-    console.error("Root element with id 'app' not found!");
-}
+// Note: The App class itself handles finding the #app element and initializing.
+// If App.js were structured differently, you might do:
+// const appRoot = document.getElementById('app');
+// if (appRoot) {
+//     const app = new App(appRoot);
+//     app.init();
+// }
